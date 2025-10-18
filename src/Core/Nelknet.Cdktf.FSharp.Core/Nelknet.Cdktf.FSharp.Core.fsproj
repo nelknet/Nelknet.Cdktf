@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nelknet.Cdktf.FSharp</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.FSharp</AssemblyName>
+    <PackageId>Nelknet.Cdktf.FSharp.Core</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nelknet</Authors>
+    <Company>Nelknet</Company>
+    <Description>Core helpers and stack DSL for CDK for Terraform in F#.</Description>
+    <PackageTags>cdktf;terraform;fsharp</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Core.fs" />
+    <Compile Include="TerraformOutputs.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" />
+    <PackageReference Include="HashiCorp.Cdktf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable central package management, https://learn.microsoft.com/en-us/nuget/consume-packages/Central-Package-Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Amazon.JSII.Runtime" Version="1.112.0" />
+    <PackageVersion Include="Constructs" Version="10.4.2" />
+    <PackageVersion Include="Fabulous.AST" Version="1.6.0" />
+    <PackageVersion Include="FSharp.Core" Version="8.0.403" />
+    <PackageVersion Include="HashiCorp.Cdktf" Version="0.21.0" />
+  </ItemGroup>
+</Project>

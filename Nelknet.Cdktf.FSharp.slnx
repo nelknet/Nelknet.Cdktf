@@ -1,0 +1,21 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/generated/">
+    <Project Path="generated/hcloud/hcloud.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/Nelknet.Cdktf.HcloudSample/Nelknet.Cdktf.HcloudSample.fsproj" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/Nelknet.Cdktf.FSharp.Core/Nelknet.Cdktf.FSharp.Core.fsproj" />
+  </Folder>
+  <Folder Name="/src/Providers/" />
+  <Folder Name="/src/Providers/Hcloud/">
+    <Project Path="src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj" />
+  </Folder>
+</Solution>

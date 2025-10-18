@@ -1,0 +1,11 @@
+{
+  "language": "csharp",
+  "app": "dotnet run --project ./samples/Nelknet.Cdktf.HcloudSample",
+  "projectId": "13284dd8-5026-4699-8fb8-6266f9080161",
+  "codeMakerOutput": "generated",
+  "terraformProviders": [
+    "hetznercloud/hcloud@~> 1.54"
+  ],
+  "terraformModules": [],
+  "context": {}
+}

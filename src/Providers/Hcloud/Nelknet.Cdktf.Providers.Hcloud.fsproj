@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nelknet.Cdktf.Providers.Hcloud</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.Providers.Hcloud</AssemblyName>
+    <PackageId>Nelknet.Cdktf.Providers.Hcloud</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nelknet</Authors>
+    <Company>Nelknet</Company>
+    <Description>F# computation expression for the Hcloud CDKTF provider.</Description>
+    <PackageTags>cdktf;terraform;fsharp;hcloud</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProviderId>hcloud</ProviderId>
+    <ProviderModule>Hcloud</ProviderModule>
+    <ProviderNamespace>Nelknet.Cdktf.Providers.Hcloud</ProviderNamespace>
+    <ProviderPackageDir>$(RepoRoot)generated/hcloud</ProviderPackageDir>
+    <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
+  </PropertyGroup>
+  <Import Project="$(RepoRoot)build/CodeGen.targets" />
+
+
+  <ItemGroup>
+    <Compile Include="Generated/Nelknet/Cdktf/Providers/Hcloud/Hcloud.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Core/Nelknet.Cdktf.FSharp.Core/Nelknet.Cdktf.FSharp.Core.fsproj" />
+    <ProjectReference Include="../../../generated/hcloud/hcloud.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+</Project>
