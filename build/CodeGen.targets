@@ -9,13 +9,6 @@
       <GeneratedFilePath Condition="'$(GeneratedFilePath)' == ''">$(GeneratedOutputRoot)\$(ProviderModule).Module.fs</GeneratedFilePath>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Remove="$(GeneratedOutputRoot)\**\*.fs" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Include="$(GeneratedOutputRoot)\Resources\**\*.fs" />
-      <Compile Include="$(GeneratedOutputRoot)\$(ProviderModule).Module.fs" />
-    </ItemGroup>
     <Error Condition="!Exists('$(ProviderPackageDir)')" Text="Provider package directory '$(ProviderPackageDir)' not found. Run the provider ensure step first." />
 
     <PropertyGroup>

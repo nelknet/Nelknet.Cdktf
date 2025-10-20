@@ -33,4 +33,9 @@
   <ItemGroup>
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
+  <!-- Include generated F# files (CodeGen.targets ensures they exist before build) -->
+  <ItemGroup>
+    <Compile Include="Generated/Resources/**/*.fs" />
+    <Compile Include="Generated/$(ProviderModule).Module.fs" />
+  </ItemGroup>
 </Project>

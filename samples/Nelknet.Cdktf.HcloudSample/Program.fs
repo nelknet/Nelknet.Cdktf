@@ -40,5 +40,7 @@ let main _ =
         }
 
     app.Synth()
+    
+    printfn "This is a test"
 
     0
