@@ -1,10 +1,8 @@
 module Nelknet.Cdktf.HcloudSample
 
 open System
-open Nelknet.Cdktf.FSharp
-open Nelknet.Cdktf.Providers.Hcloud
-open Nelknet.Cdktf.Providers.Hcloud.Hcloud
-open Nelknet.Cdktf.FSharp.Terraform
+open Nelknet.Cdktf
+open Nelknet.Cdktf.Providers
 
 module private Env =
     let require name =
@@ -41,6 +39,6 @@ let main _ =
                 |> ignore
         }
 
-    ignore app
+    app.Synth()
 
     0

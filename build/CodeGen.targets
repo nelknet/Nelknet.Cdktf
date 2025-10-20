@@ -6,10 +6,17 @@
   <Target Name="EnsureProviderGenerated" BeforeTargets="BeforeBuild" Condition="'$(ProviderId)' != '' and '$(EnableProviderCodeGen)' != 'false'">
     <PropertyGroup>
       <GeneratedOutputRoot Condition="'$(GeneratedOutputRoot)' == ''">$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
-      <GeneratedFilePath Condition="'$(GeneratedFilePath)' == ''">$(GeneratedOutputRoot)\$(ProviderNamespace.Replace('.', '\\'))\$(ProviderModule).fs</GeneratedFilePath>
+      <GeneratedFilePath Condition="'$(GeneratedFilePath)' == ''">$(GeneratedOutputRoot)\$(ProviderModule).Module.fs</GeneratedFilePath>
     </PropertyGroup>
 
-    <Error Condition="!Exists('$(ProviderPackageDir)')" Text="Provider package directory '$(ProviderPackageDir)' not found. Run 'cdktf provider add $(ProviderId)' first." />
+    <ItemGroup>
+      <Compile Remove="$(GeneratedOutputRoot)\**\*.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="$(GeneratedOutputRoot)\Resources\**\*.fs" />
+      <Compile Include="$(GeneratedOutputRoot)\$(ProviderModule).Module.fs" />
+    </ItemGroup>
+    <Error Condition="!Exists('$(ProviderPackageDir)')" Text="Provider package directory '$(ProviderPackageDir)' not found. Run the provider ensure step first." />
 
     <PropertyGroup>
       <_NeedsCodeGen Condition="!Exists('$(GeneratedFilePath)')">true</_NeedsCodeGen>

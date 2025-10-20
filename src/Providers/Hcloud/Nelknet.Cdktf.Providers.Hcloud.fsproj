@@ -17,20 +17,22 @@
     <ProviderId>hcloud</ProviderId>
     <ProviderModule>Hcloud</ProviderModule>
     <ProviderNamespace>Nelknet.Cdktf.Providers.Hcloud</ProviderNamespace>
+    <ProviderSource>hetznercloud/hcloud</ProviderSource>
+    <ProviderVersion>1.54.0</ProviderVersion>
     <ProviderPackageDir>$(RepoRoot)generated/hcloud</ProviderPackageDir>
     <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
+    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\hcloud.dll</ProviderAssemblyPath>
   </PropertyGroup>
   <Import Project="$(RepoRoot)build/CodeGen.targets" />
 
-
   <ItemGroup>
-    <Compile Include="Generated/Nelknet/Cdktf/Providers/Hcloud/Hcloud.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../Core/Nelknet.Cdktf.FSharp.Core/Nelknet.Cdktf.FSharp.Core.fsproj" />
-    <ProjectReference Include="../../../generated/hcloud/hcloud.csproj" />
+    <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
+    <!-- Reference the generated provider project -->
+    <ProjectReference Include="$(ProviderPackageDir)/hcloud.csproj"
+                      Condition="Exists('$(ProviderPackageDir)/hcloud.csproj')" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
+
 </Project>

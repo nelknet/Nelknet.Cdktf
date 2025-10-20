@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>{{Namespace}}</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.Providers.{{Module}}</AssemblyName>
+    <PackageId>Nelknet.Cdktf.Providers.{{Module}}</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nelknet</Authors>
+    <Company>Nelknet</Company>
+    <Description>F# computation expression for the {{Module}} CDKTF provider.</Description>
+    <PackageTags>{{PackageTags}}</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProviderId>{{ProviderId}}</ProviderId>
+    <ProviderModule>{{Module}}</ProviderModule>
+    <ProviderNamespace>{{Namespace}}</ProviderNamespace>
+    <ProviderSource>{{Source}}</ProviderSource>
+    <ProviderVersion>{{Version}}</ProviderVersion>
+    <ProviderPackageDir>$(RepoRoot)generated/{{ProviderId}}</ProviderPackageDir>
+    <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
+    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\{{ProviderId}}.dll</ProviderAssemblyPath>
+  </PropertyGroup>
+  <Import Project="$(RepoRoot)build/CodeGen.targets" />
+  <ItemGroup>
+    <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
+    <!-- Reference the generated provider project -->
+    <ProjectReference Include="$(ProviderPackageDir)/{{ProviderId}}.csproj"
+                      Condition="Exists('$(ProviderPackageDir)/{{ProviderId}}.csproj')" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+</Project>

@@ -4,7 +4,8 @@
   "projectId": "13284dd8-5026-4699-8fb8-6266f9080161",
   "codeMakerOutput": "generated",
   "terraformProviders": [
-    "hetznercloud/hcloud@~> 1.54"
+    "hashicorp/aws@=5.100.0",
+    "hetznercloud/hcloud@=1.54.0"
   ],
   "terraformModules": [],
   "context": {}

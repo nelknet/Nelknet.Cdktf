@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nelknet.Cdktf.Providers.Aws</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.Providers.Aws</AssemblyName>
+    <PackageId>Nelknet.Cdktf.Providers.Aws</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nelknet</Authors>
+    <Company>Nelknet</Company>
+    <Description>F# computation expression for the AWS CDKTF provider.</Description>
+    <PackageTags>cdktf;terraform;fsharp;aws</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProviderId>aws</ProviderId>
+    <ProviderModule>Aws</ProviderModule>
+    <ProviderNamespace>Nelknet.Cdktf.Providers.Aws</ProviderNamespace>
+    <ProviderSource>hashicorp/aws</ProviderSource>
+    <ProviderVersion>5.100.0</ProviderVersion>
+    <ProviderPackageDir>$(RepoRoot)generated/aws</ProviderPackageDir>
+    <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
+    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\aws.dll</ProviderAssemblyPath>
+  </PropertyGroup>
+  <Import Project="$(RepoRoot)build/CodeGen.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
+    <!-- Reference the generated provider project -->
+    <ProjectReference Include="$(ProviderPackageDir)/aws.csproj"
+                      Condition="Exists('$(ProviderPackageDir)/aws.csproj')" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+
+</Project>

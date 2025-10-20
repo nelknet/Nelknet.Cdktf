@@ -1,15 +1,16 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `src/Core/Nelknet.Cdktf.FSharp.Core`: core computation-expression infrastructure (`Core.fs`, `TerraformOutputs.fs`); published as the `Nelknet.Cdktf.FSharp.Core` package.
+- `src/Core/Nelknet.Cdktf.Core`: core computation-expression infrastructure (`Core.fs`, `TerraformOutputs.fs`); published as the `Nelknet.Cdktf.Core` package.
 - `src/Providers/<Provider>`: generated provider modules (e.g., `src/Providers/Hcloud`); each contains a provider-specific `.fsproj` and `Generated/` subtree emitted by the code generator.  Treat generated files as read-only.
-- `generated/<provider>`: raw C# bindings emitted by `cdktf provider add`; keep them targeting `net8.0` and refresh via the CLI when the provider updates.
+- `generated/<provider>`: raw C# bindings emitted by `cdktf provider add`; the directory is ignored by git and repopulated automatically by the build.
 - `samples/Nelknet.Cdktf.HcloudSample`: runnable stack exercising the generated Hetzner DSL; requires `HCLOUD_TOKEN`.
 - `tools/Nelknet.Cdktf.CodeGen`: Fabulous.AST generator.  MSBuild targets call it automatically before build; you can also run it manually for a single provider.
 - `cdktf.out` is throwaway Terraform output; exclude from commits. `source_code_references/` is read-only inspiration—do not modify.
 
 ## Build, Test, and Development Commands
-- `dotnet build` (or `dotnet build Nelknet.Cdktf.FSharp.slnx`): restores and builds core, providers, generated bindings, and sample.  Provider codegen runs automatically.
+- `npm install` (once per clone) to install the local `cdktf`/`constructs` packages.
+- `dotnet build -p:ForceCodeGen=true` (or just `dotnet build`) restores core projects, runs the provider ensure step, and regenerates the F# surface.
 - `dotnet run --project samples/Nelknet.Cdktf.HcloudSample`: executes the Hetzner sample; fails fast if `HCLOUD_TOKEN` is missing.
 - `HCLOUD_TOKEN=... cdktf synth|diff|deploy`: synthesize, diff, or deploy using the generated DSL.
 - `dotnet run --project tools/Nelknet.Cdktf.CodeGen -- --provider-id <id> --module-name <Module> --namespace <ns> --package-dir <path> --output-root <path>`: manually regenerate a specific provider (MSBuild normally handles this).

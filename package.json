@@ -1,0 +1,13 @@
+{
+  "name": "nelknet-cdktf",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {
+    "cdktf": "0.21.0",
+    "constructs": "10.4.2"
+  },
+  "devDependencies": {
+    "cdktf-cli": "^0.21.0"
+  }
+}

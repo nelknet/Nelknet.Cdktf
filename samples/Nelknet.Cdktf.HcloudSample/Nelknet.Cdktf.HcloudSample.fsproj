@@ -10,12 +10,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Core\Nelknet.Cdktf.FSharp.Core\Nelknet.Cdktf.FSharp.Core.fsproj" />
+    <ProjectReference Include="..\..\src\Core\Nelknet.Cdktf.Core\Nelknet.Cdktf.Core.fsproj" />
     <ProjectReference Include="..\..\src\Providers\Hcloud\Nelknet.Cdktf.Providers.Hcloud.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="hcloud" Condition="Exists('$(RepoRoot)generated/hcloud/bin/$(Configuration)/net8.0/hcloud.dll')">
+      <HintPath>$(RepoRoot)generated/hcloud/bin/$(Configuration)/net8.0/hcloud.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" />
   </ItemGroup>
+
+  <Target Name="EnsureHcloudArtifacts" BeforeTargets="ResolveReferences">
+    <Exec Command="dotnet run --no-build --project &quot;$(RepoRoot)tools/Nelknet.Cdktf.ProviderManager/Nelknet.Cdktf.ProviderManager.fsproj&quot; -- ensure --provider-id hcloud --source hetznercloud/hcloud --version 1.54.0 --module Hcloud --namespace Nelknet.Cdktf.Providers.Hcloud --configuration $(Configuration)" />
+    <Error Condition="!Exists('$(RepoRoot)generated/hcloud/bin/$(Configuration)/net8.0/hcloud.dll')" Text="hcloud provider assembly not found after ensure step." />
+  </Target>
 
 </Project>

@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup Condition="$([System.String]::Copy('$(MSBuildProjectDirectory)').Contains('generated'))">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Nullable>annotations</Nullable>
+    <NoWarn>$(NoWarn);1573;1591;1587;CS1573;CS1591;CS1587;CS8600;CS8602;CS8618;CS8632</NoWarn>
+  </PropertyGroup>
+
+  <!-- Ensure providers are available before building provider projects -->
+  <Target Name="EnsureProvidersBootstrapped"
+          BeforeTargets="BeforeBuild"
+          Condition="'$(ProviderId)' != '' and !Exists('$(RepoRoot)generated/.bootstrap-complete')">
+    <Message Text="Running bootstrap to ensure providers..." Importance="high" />
+    <Exec Command="dotnet run --project &quot;$(RepoRoot)tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj&quot;"
+          WorkingDirectory="$(RepoRoot)" />
+  </Target>
+</Project>
