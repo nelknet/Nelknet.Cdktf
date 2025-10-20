@@ -33,6 +33,8 @@ jobs:
         run: npm ci
       - name: Scaffold provider projects
         run: dotnet fsi tools/scaffold-providers.fsx
+      - name: Restore dependencies
+        run: dotnet restore
       - name: Bootstrap providers
         run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj
       - name: Determine version
@@ -50,7 +52,7 @@ jobs:
           fi
           echo "value=$version" >> "$GITHUB_OUTPUT"
       - name: Build (Release)
-        run: dotnet build -c Release -p:ForceCodeGen=true
+        run: dotnet build -c Release --no-restore -p:ForceCodeGen=true
       - name: Pack packages
         run: |
           version='${{ steps.version.outputs.value }}'

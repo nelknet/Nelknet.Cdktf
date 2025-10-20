@@ -27,10 +27,12 @@ jobs:
         run: npm ci
       - name: Scaffold provider projects
         run: dotnet fsi tools/scaffold-providers.fsx
+      - name: Restore dependencies
+        run: dotnet restore
       - name: Bootstrap providers
         run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj
-      - name: Restore and build
-        run: dotnet build -p:ForceCodeGen=true
+      - name: Build
+        run: dotnet build --no-restore -p:ForceCodeGen=true
       - name: Pack packages (validation)
         run: |
           dotnet pack src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj -c Release -o artifacts --no-build
