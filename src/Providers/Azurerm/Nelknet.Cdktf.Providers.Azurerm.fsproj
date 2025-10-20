@@ -2,34 +2,34 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RootNamespace>Nelknet.Cdktf.Providers.Random</RootNamespace>
-    <AssemblyName>Nelknet.Cdktf.Providers.Random</AssemblyName>
-    <PackageId>Nelknet.Cdktf.Providers.Random</PackageId>
+    <RootNamespace>Nelknet.Cdktf.Providers.Azurerm</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.Providers.Azurerm</AssemblyName>
+    <PackageId>Nelknet.Cdktf.Providers.Azurerm</PackageId>
     <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
-    <Description>F# computation expression for the CDKTF provider hashicorp/random (version 3.6.0).</Description>
-    <PackageReleaseNotes>Generated from hashicorp/random@=3.6.0.</PackageReleaseNotes>
-    <PackageTags>cdktf;terraform;fsharp;random</PackageTags>
+    <Description>F# computation expression for the CDKTF provider hashicorp/azurerm (version 4.1.0).</Description>
+    <PackageReleaseNotes>Generated from hashicorp/azurerm@=4.1.0.</PackageReleaseNotes>
+    <PackageTags>cdktf;terraform;fsharp;azurerm</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ProviderId>random</ProviderId>
-    <ProviderModule>Random</ProviderModule>
-    <ProviderNamespace>Nelknet.Cdktf.Providers.Random</ProviderNamespace>
-    <ProviderSource>hashicorp/random</ProviderSource>
-    <ProviderVersion>3.6.0</ProviderVersion>
-    <ProviderPackageDir>$(RepoRoot)generated/random</ProviderPackageDir>
+    <ProviderId>azurerm</ProviderId>
+    <ProviderModule>Azurerm</ProviderModule>
+    <ProviderNamespace>Nelknet.Cdktf.Providers.Azurerm</ProviderNamespace>
+    <ProviderSource>hashicorp/azurerm</ProviderSource>
+    <ProviderVersion>4.1.0</ProviderVersion>
+    <ProviderPackageDir>$(RepoRoot)generated/azurerm</ProviderPackageDir>
     <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
-    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\random.dll</ProviderAssemblyPath>
+    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\azurerm.dll</ProviderAssemblyPath>
   </PropertyGroup>
   <Import Project="$(RepoRoot)build/CodeGen.targets" />
   <ItemGroup>
     <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
     <!-- Reference the generated provider project -->
-    <ProjectReference Include="$(ProviderPackageDir)/random.csproj"
-                      Condition="Exists('$(ProviderPackageDir)/random.csproj')" />
+    <ProjectReference Include="$(ProviderPackageDir)/azurerm.csproj"
+                      Condition="Exists('$(ProviderPackageDir)/azurerm.csproj')" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />

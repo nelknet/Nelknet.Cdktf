@@ -5,10 +5,10 @@
     <NoWarn>$(NoWarn);1573;1591;1587;CS1573;CS1591;CS1587;CS8600;CS8602;CS8618;CS8632</NoWarn>
   </PropertyGroup>
 
-  <!-- Ensure providers are available before building provider projects -->
+  <!-- Ensure providers are available once per build -->
   <Target Name="EnsureProvidersBootstrapped"
           BeforeTargets="BeforeBuild"
-          Condition="'$(ProviderId)' != ''">
+          Condition="'$(IsTopLevelBuild)' == 'true'">
     <Message Text="Checking provider status..." Importance="low" />
     <Exec Command="dotnet run --project &quot;$(RepoRoot)tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj&quot;"
           WorkingDirectory="$(RepoRoot)" />

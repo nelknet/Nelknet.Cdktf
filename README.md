@@ -133,14 +133,11 @@ Afterwards `dotnet build -p:ForceCodeGen=true` (or a plain `dotnet build`) will 
 
 Adding a new provider is streamlined with the Bootstrap project. Follow these steps:
 
-1. **Edit `cdktf.json`** and add the new provider/version to `terraformProviders`. For example:
-   ```json
-   "terraformProviders": [
-     "hashicorp/aws@=5.100.0",
-     "hetznercloud/hcloud@=1.54.0",
-     "hashicorp/random@=3.6.0"  // New provider
-   ]
+1. **Ask CDKTF to add the provider.** This updates `cdktf.json`, downloads the schema into `generated/<provider>/`, and primes the local cache in one step:
+   ```bash
+   cdktf provider add hashicorp/random@=3.6.0 --language csharp --force-local
    ```
+   Replace the source and version with the provider you need. The `--language csharp` flag ensures the C# bindings (which our generator consumes) are emitted.
 
 2. **Run the build** which will automatically:
    - Detect the new provider in `cdktf.json`
@@ -148,6 +145,7 @@ Adding a new provider is streamlined with the Bootstrap project. Follow these st
    - Generate the provider's F# project from the template
    - Build the C# provider bindings
    - Generate the F# computation expressions
+   - Stamp the provider project metadata with the upstream source/version (exposed in NuGet description & release notes)
    ```bash
    dotnet build -p:ForceCodeGen=true
    ```

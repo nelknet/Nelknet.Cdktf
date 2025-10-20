@@ -8,7 +8,8 @@
     <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
-    <Description>F# computation expression for the AWS CDKTF provider.</Description>
+    <Description>F# computation expression for the CDKTF provider hashicorp/aws (version 5.100.0).</Description>
+    <PackageReleaseNotes>Generated from hashicorp/aws@=5.100.0.</PackageReleaseNotes>
     <PackageTags>cdktf;terraform;fsharp;aws</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

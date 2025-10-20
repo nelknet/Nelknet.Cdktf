@@ -6,7 +6,8 @@
   "terraformProviders": [
     "hashicorp/aws@=5.100.0",
     "hetznercloud/hcloud@=1.54.0",
-    "hashicorp/random@=3.6.0"
+    "hashicorp/random@=3.6.0",
+    "hashicorp/azurerm@=4.1.0"
   ],
   "terraformModules": [],
   "context": {}
