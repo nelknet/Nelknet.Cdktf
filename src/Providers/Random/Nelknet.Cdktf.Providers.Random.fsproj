@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>Nelknet.Cdktf.Providers.Random</RootNamespace>
+    <AssemblyName>Nelknet.Cdktf.Providers.Random</AssemblyName>
+    <PackageId>Nelknet.Cdktf.Providers.Random</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Nelknet</Authors>
+    <Company>Nelknet</Company>
+    <Description>F# computation expression for the Random CDKTF provider.</Description>
+    <PackageTags>cdktf;terraform;fsharp;random</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProviderId>random</ProviderId>
+    <ProviderModule>Random</ProviderModule>
+    <ProviderNamespace>Nelknet.Cdktf.Providers.Random</ProviderNamespace>
+    <ProviderSource>hashicorp/random</ProviderSource>
+    <ProviderVersion>3.6.0</ProviderVersion>
+    <ProviderPackageDir>$(RepoRoot)generated/random</ProviderPackageDir>
+    <GeneratedOutputRoot>$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
+    <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\random.dll</ProviderAssemblyPath>
+  </PropertyGroup>
+  <Import Project="$(RepoRoot)build/CodeGen.targets" />
+  <ItemGroup>
+    <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
+    <!-- Reference the generated provider project -->
+    <ProjectReference Include="$(ProviderPackageDir)/random.csproj"
+                      Condition="Exists('$(ProviderPackageDir)/random.csproj')" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+</Project>

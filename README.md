@@ -131,25 +131,59 @@ Afterwards `dotnet build -p:ForceCodeGen=true` (or a plain `dotnet build`) will 
 
 ## Adding a new provider
 
-Adding a provider no longer involves committing generated artifacts. A typical flow looks like:
+Adding a new provider is streamlined with the Bootstrap project. Follow these steps:
 
-1. Edit `cdktf.json` and add the new provider/version to `terraformProviders`.
-2. Run the scaffold command once so the deterministic `.fsproj` is created and added to the solution (module/namespace names are derived from the provider id automatically):
-   ```bash
-   dotnet run --project tools/Nelknet.Cdktf.ProviderManager -- scaffold \
-      --provider-id aws \
-      --source hashicorp/aws \
-      --version 5.100.0
+1. **Edit `cdktf.json`** and add the new provider/version to `terraformProviders`. For example:
+   ```json
+   "terraformProviders": [
+     "hashicorp/aws@=5.100.0",
+     "hetznercloud/hcloud@=1.54.0",
+     "hashicorp/random@=3.6.0"  // New provider
+   ]
    ```
-   The command copies the template under `src/Providers/_Template/`, fills in the metadata, and updates `Nelknet.Cdktf.slnx`.
-3. Regenerate code locally (nothing is committed):
+
+2. **Delete the bootstrap marker** to force regeneration:
    ```bash
-   npm install
+   rm generated/.bootstrap-complete
+   ```
+
+3. **Run the build** which will:
+   - Download the provider via `cdktf provider add`
+   - Generate the provider's F# project from the template
+   - Build the C# provider bindings
+   - Generate the F# computation expressions
+   ```bash
    dotnet build -p:ForceCodeGen=true
    ```
-4. Commit just the handwritten pieces: `cdktf.json`, the new `.fsproj`, and any documentation updates.
 
-Upgrading an existing provider follows the same steps (`scaffold` accepts `--skip-project` if you only want to bump the version). No generated C# or F# files should show up in the diff.
+4. **Add the new provider project to the solution** (if not already added):
+   ```bash
+   dotnet sln add src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
+   ```
+
+5. **Commit the changes**:
+   - The updated `cdktf.json`
+   - The new provider's `.fsproj` file in `src/Providers/<Provider>/`
+   - Any documentation updates
+
+   Note: No generated code (C# or F#) should be committed - these remain in `.gitignore`.
+
+### What happens during the build
+
+The Bootstrap project (`tools/Nelknet.Cdktf.Bootstrap/`) automatically:
+- Reads providers from `cdktf.json`
+- Downloads missing providers using `cdktf provider add`
+- Normalizes generated C# projects for Central Package Management
+- Creates provider F# projects from the template in `src/Providers/_Template/`
+- Caches everything to avoid redundant downloads
+
+### Upgrading an existing provider
+
+To upgrade a provider version:
+1. Update the version in `cdktf.json`
+2. Delete the provider's version marker: `rm generated/<provider>/.version`
+3. Run `dotnet build -p:ForceCodeGen=true`
+4. Commit only the `cdktf.json` change
 
 ## Using the generated DSL
 

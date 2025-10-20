@@ -4,6 +4,9 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/generated/">
+    <Project Path="generated/random/random.csproj" />
+  </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/Nelknet.Cdktf.HcloudSample/Nelknet.Cdktf.HcloudSample.fsproj" />
   </Folder>
@@ -17,6 +20,9 @@
   </Folder>
   <Folder Name="/src/Providers/Aws/">
     <Project Path="src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj" />
+  </Folder>
+  <Folder Name="/src/Providers/Random/">
+    <Project Path="src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj" />
   </Folder>
   <Folder Name="/tools/" />
   <Folder Name="/tools/Nelknet.Cdktf.Bootstrap/">

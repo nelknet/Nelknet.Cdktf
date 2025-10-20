@@ -5,7 +5,8 @@
   "codeMakerOutput": "generated",
   "terraformProviders": [
     "hashicorp/aws@=5.100.0",
-    "hetznercloud/hcloud@=1.54.0"
+    "hetznercloud/hcloud@=1.54.0",
+    "hashicorp/random@=3.6.0"
   ],
   "terraformModules": [],
   "context": {}
