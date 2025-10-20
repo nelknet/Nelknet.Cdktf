@@ -290,22 +290,23 @@ let main argv =
             printfn "=== Nelknet.Cdktf.Bootstrap ==="
             printfn "Repository root: %s" repoRoot
 
-            // Check if bootstrap is needed
-            let bootstrapMarker = Path.Combine(repoRoot, "generated", ".bootstrap-complete")
-            let manifestPath = Path.Combine(repoRoot, "cdktf.json")
+            // Load providers and check what actually needs updating
+            let providers = loadProviders repoRoot
+            printfn "Found %d providers in cdktf.json" providers.Length
 
-            let needsBootstrap =
-                not (File.Exists(bootstrapMarker)) ||
-                (File.Exists(manifestPath) && File.Exists(bootstrapMarker) &&
-                 File.GetLastWriteTimeUtc(manifestPath) > File.GetLastWriteTimeUtc(bootstrapMarker))
+            // Check if any provider needs updating or if F# projects are missing
+            let providersNeedingWork =
+                providers
+                |> List.filter (fun p ->
+                    needsProviderDownload repoRoot p ||
+                    not (File.Exists(Path.Combine(repoRoot, "src", "Providers", p.Module,
+                                                  $"Nelknet.Cdktf.Providers.{p.Module}.fsproj"))))
 
-            if not needsBootstrap then
-                printfn "Bootstrap already complete and up to date"
+            if List.isEmpty providersNeedingWork then
+                printfn "All providers are up to date"
                 0
             else
-                let providers = loadProviders repoRoot
-
-                printfn "Found %d providers in cdktf.json" providers.Length
+                printfn "Found %d provider(s) needing updates" providersNeedingWork.Length
 
                 // Ensure node_modules exist if we need to download
                 if providers |> List.exists (needsProviderDownload repoRoot) then
@@ -316,15 +317,11 @@ let main argv =
                         printfn "Running npm install to get cdktf CLI..."
                         runProcess repoRoot "npm" ["install"] |> ignore
 
-                // Ensure each provider
-                for provider in providers do
+                // Ensure only providers that need work
+                for provider in providersNeedingWork do
                     printfn "\n--- Processing %s ---" provider.Id
                     ensureProvider repoRoot provider
                     ensureProviderProject repoRoot provider
-
-                // Write bootstrap complete marker
-                Directory.CreateDirectory(Path.GetDirectoryName(bootstrapMarker)) |> ignore
-                File.WriteAllText(bootstrapMarker, DateTime.UtcNow.ToString("O"))
 
                 printfn "\n=== Bootstrap complete ==="
                 0

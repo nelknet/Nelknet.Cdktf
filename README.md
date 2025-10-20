@@ -142,13 +142,9 @@ Adding a new provider is streamlined with the Bootstrap project. Follow these st
    ]
    ```
 
-2. **Delete the bootstrap marker** to force regeneration:
-   ```bash
-   rm generated/.bootstrap-complete
-   ```
-
-3. **Run the build** which will:
-   - Download the provider via `cdktf provider add`
+2. **Run the build** which will automatically:
+   - Detect the new provider in `cdktf.json`
+   - Download it via `cdktf provider add`
    - Generate the provider's F# project from the template
    - Build the C# provider bindings
    - Generate the F# computation expressions
@@ -156,12 +152,12 @@ Adding a new provider is streamlined with the Bootstrap project. Follow these st
    dotnet build -p:ForceCodeGen=true
    ```
 
-4. **Add the new provider project to the solution** (if not already added):
+3. **Add the new provider project to the solution** (if not already added):
    ```bash
    dotnet sln add src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
    ```
 
-5. **Commit the changes**:
+4. **Commit the changes**:
    - The updated `cdktf.json`
    - The new provider's `.fsproj` file in `src/Providers/<Provider>/`
    - Any documentation updates
@@ -181,9 +177,10 @@ The Bootstrap project (`tools/Nelknet.Cdktf.Bootstrap/`) automatically:
 
 To upgrade a provider version:
 1. Update the version in `cdktf.json`
-2. Delete the provider's version marker: `rm generated/<provider>/.version`
-3. Run `dotnet build -p:ForceCodeGen=true`
-4. Commit only the `cdktf.json` change
+2. Run `dotnet build -p:ForceCodeGen=true`
+3. Commit only the `cdktf.json` change
+
+The build automatically detects version changes and re-downloads the provider.
 
 ## Using the generated DSL
 
