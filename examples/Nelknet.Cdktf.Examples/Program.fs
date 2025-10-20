@@ -1,4 +1,4 @@
-module Nelknet.Cdktf.HcloudSample
+module Nelknet.Cdktf.Examples
 
 open System
 open Nelknet.Cdktf
@@ -16,7 +16,7 @@ let main _ =
     let apiToken = Env.require "HCLOUD_TOKEN"
 
     let app =
-        stack "hcloud-sample" {
+        stack "hcloud-example" {
             let _provider = 
                 Hcloud.provider "hcloud" {
                     token apiToken
@@ -41,6 +41,6 @@ let main _ =
 
     app.Synth()
     
-    printfn "This is a test"
+    printfn "The Hetzner example stack synthesized successfully."
 
     0

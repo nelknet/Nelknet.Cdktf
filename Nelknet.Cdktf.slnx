@@ -5,10 +5,13 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/generated/">
+    <Project Path="generated/aws/aws.csproj" />
+    <Project Path="generated/azurerm/azurerm.csproj" />
+    <Project Path="generated/hcloud/hcloud.csproj" />
     <Project Path="generated/random/random.csproj" />
   </Folder>
-  <Folder Name="/samples/">
-    <Project Path="samples/Nelknet.Cdktf.HcloudSample/Nelknet.Cdktf.HcloudSample.fsproj" />
+  <Folder Name="/examples/">
+    <Project Path="examples/Nelknet.Cdktf.Examples/Nelknet.Cdktf.Examples.fsproj" />
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/Core/">
@@ -27,9 +30,6 @@
   <Folder Name="/tools/" />
   <Folder Name="/tools/Nelknet.Cdktf.Bootstrap/">
     <Project Path="tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj" />
-  </Folder>
-  <Folder Name="/tools/Nelknet.Cdktf.ProviderManager/">
-    <Project Path="tools/Nelknet.Cdktf.ProviderManager/Nelknet.Cdktf.ProviderManager.fsproj" />
   </Folder>
   <Folder Name="/tools/Nelknet.Cdktf.CodeGen/">
     <Project Path="tools/Nelknet.Cdktf.CodeGen/Nelknet.Cdktf.CodeGen.fsproj" />

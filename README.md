@@ -8,7 +8,6 @@ F# computation expressions and helpers that sit on top of the CDK for Terraform 
 - **F#‑friendly operations** – Terraform maps become `seq<string * string>`, repeated fields accept `seq<'T>`, and common unions (e.g., `bool | cdktf.IResolvable`) expose overloads so you don’t have to pass `obj`.
 - **Compile-time required checks** – generated builders track required custom operations with phantom types (`Missing`/`Present`), so omitting a mandatory field (e.g., `name`, `server_type`) produces a compile-time `CompilerMessage` error instead of a runtime failure.
 - **Ambient stack support** – `stack "name" { ... }` keeps the current `TerraformStack` available without threading it through every builder.
-- **Ready for NuGet** – `dotnet pack` produces individual packages (metadata lives in `src/Core/Nelknet.Cdktf.Core` and each provider project).
 
 ## Repository Layout
 
@@ -16,10 +15,9 @@ F# computation expressions and helpers that sit on top of the CDK for Terraform 
 src/Core/Nelknet.Cdktf.Core/        – core helpers (stack DSL, output helpers)
 src/Providers/Hcloud/            – generated Hetzner computation expression
 src/Providers/_Template/         – scaffold template consumed by the provider manager
-samples/Nelknet.Cdktf.HcloudSample/ – minimal stack using the generated Hetzner CE
+examples/Nelknet.Cdktf.Examples/ – minimal stack using the generated Hetzner example
 generated/                       – raw .NET bindings emitted by `cdktf provider add` (ignored; recreated at build time)
 tools/Nelknet.Cdktf.CodeGen/     – Fabulous.AST-based generator
-tools/Nelknet.Cdktf.ProviderManager/ – CLI helper that refreshes/scaffolds providers
 ```
 
 > We keep the C# binding project because the generator needs it to resolve fully-qualified .NET type names (the JSII schema alone does not encode C# naming quirks such as `Certificate_`).
@@ -53,11 +51,9 @@ This repo publishes two kinds of packages to NuGet: `Nelknet.Cdktf.Core` (shared
    dotnet new console -lang F# -n Demo.Infra
    cd Demo.Infra
    ```
-2. **Reference the DSL packages you need.** At minimum add the core library plus the provider(s) you want to use:
+2. **Reference the DSL packages you need.** Install the provider package; it brings along `Nelknet.Cdktf.Core`, `HashiCorp.Cdktf`, and the generated bindings transitively:
    ```bash
-   dotnet add package Nelknet.Cdktf.Core
    dotnet add package Nelknet.Cdktf.Providers.Hcloud    # or Aws / others
-   dotnet add package HashiCorp.Cdktf                   # brings in runtime support
   ```
   When targeting AWS, replace `Hcloud` with `Aws`. You can mix and match providers as long as they are pinned to versions available on NuGet.
 3. **Add a `cdktf.json` manifest** at the repo root so the CDKTF CLI knows how to execute your stack. Example:
@@ -118,16 +114,13 @@ npm install                                # installs local cdktf + constructs p
 dotnet build -p:ForceCodeGen=true          # downloads providers and regenerates the F# surface
 ```
 
-During the build MSBuild invokes `tools/Nelknet.Cdktf.ProviderManager` with the `ensure` command for every entry in `cdktf.json`. `ensure` runs `cdktf provider add ... --force-local`, normalises the emitted C# project, builds the `hcloud.dll`/`aws.dll` assemblies, and writes a small marker so subsequent builds skip redundant work.
-
-To refresh a single provider by hand you can call the same helper directly:
+During the build MSBuild runs the Bootstrap helper (`tools/Nelknet.Cdktf.Bootstrap/`) once; it checks every provider listed in `cdktf.json`, downloads missing bindings, normalises the generated C# project, and keeps the cached assemblies up to date. When you add providers manually, regenerate any missing `.fsproj` files with:
 
 ```bash
-dotnet run --no-build --project tools/Nelknet.Cdktf.ProviderManager \
-   -- ensure --provider-id hcloud --source hetznercloud/hcloud --version 1.54.0
+dotnet fsi tools/scaffold-providers.fsx
 ```
 
-Afterwards `dotnet build -p:ForceCodeGen=true` (or a plain `dotnet build`) will regenerate the F# DSL using the newly downloaded schema.
+The script scans `cdktf.json` and copies the template under `src/Providers/_Template/` for every provider that does not yet have a matching project.
 
 ## Adding a new provider
 
@@ -139,23 +132,28 @@ Adding a new provider is streamlined with the Bootstrap project. Follow these st
    ```
    Replace the source and version with the provider you need. The `--language csharp` flag ensures the C# bindings (which our generator consumes) are emitted.
 
-2. **Run the build** which will automatically:
-   - Detect the new provider in `cdktf.json`
-   - Download it via `cdktf provider add`
-   - Generate the provider's F# project from the template
-   - Build the C# provider bindings
-   - Generate the F# computation expressions
+2. **Scaffold any missing provider projects.**
+   ```bash
+   dotnet fsi tools/scaffold-providers.fsx
+   ```
+   This reads `cdktf.json`, creates `src/Providers/<Module>/Nelknet.Cdktf.Providers.<Module>.fsproj` when missing, and stamps it with the correct provider metadata.
+
+3. **Add the projects to the solution** so editors/builds pick them up:
+   ```bash
+   dotnet sln add src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
+   dotnet sln add generated/random/random.csproj
+   ```
+
+4. **Run the build** which will automatically:
+   - Verify the provider download (reusing the cached schema if it is already present)
+   - Normalise the generated C# project and build the binding assembly
+   - Generate / refresh the F# computation expressions under `src/Providers/<Provider>/Generated`
    - Stamp the provider project metadata with the upstream source/version (exposed in NuGet description & release notes)
    ```bash
    dotnet build -p:ForceCodeGen=true
    ```
 
-3. **Add the new provider project to the solution** (if not already added):
-   ```bash
-   dotnet sln add src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
-   ```
-
-4. **Commit the changes**:
+5. **Commit the changes**:
    - The updated `cdktf.json`
    - The new provider's `.fsproj` file in `src/Providers/<Provider>/`
    - Any documentation updates
@@ -191,7 +189,7 @@ open Nelknet.Cdktf.Terraform
 let apiToken = System.Environment.GetEnvironmentVariable "HCLOUD_TOKEN"
 
 let app =
-    stack "hcloud-sample" {
+    stack "hcloud-example" {
         // Registers the provider on the current stack
         let _ =
             Hcloud.provider "hcloud" {
@@ -254,6 +252,6 @@ Because everything is schema-driven you only need to regenerate when the provide
 
 - `dotnet run --project tools/Nelknet.Cdktf.CodeGen` – regenerate computation expressions from `.jsii`.
 - `dotnet build` – restore and build all projects.
-- `cdktf deploy/destroy` – run the sample stack (requires `HCLOUD_TOKEN`).
+- `cdktf deploy/destroy` – run the example stack (requires `HCLOUD_TOKEN`).
 
 Happy infrastructure hacking in F#!

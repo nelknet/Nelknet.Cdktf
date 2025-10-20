@@ -17,8 +17,8 @@ dotnet build -p:ForceCodeGen=true
 # Subsequent builds
 dotnet build
 
-# Run the Hetzner sample (requires HCLOUD_TOKEN)
-HCLOUD_TOKEN=your-token dotnet run --project samples/Nelknet.Cdktf.HcloudSample
+# Run the Hetzner example (requires HCLOUD_TOKEN)
+HCLOUD_TOKEN=your-token dotnet run --project examples/Nelknet.Cdktf.Examples
 
 # Synthesize Terraform configuration to cdktf.out/
 HCLOUD_TOKEN=your-token cdktf synth
@@ -32,8 +32,10 @@ HCLOUD_TOKEN=your-token cdktf diff
 
 ### Provider Management
 ```bash
-# Refresh Hetzner provider bindings (C# + F#)
-dotnet run --no-build --project tools/Nelknet.Cdktf.ProviderManager   -- ensure --provider-id hcloud --source hetznercloud/hcloud --version 1.54.0
+# After editing cdktf.json, scaffold any missing provider projects
+dotnet fsi tools/scaffold-providers.fsx
+
+# Regenerate bindings (C# + F#)
 dotnet build -p:ForceCodeGen=true
 ```
 
@@ -86,18 +88,18 @@ Terraform JSON (cdktf.out/)
 - `src/Providers/<Provider>/Generated/...` - Fabulous.AST output (regenerated automatically; ignored in git)
 
 ### Important Configuration
-- `cdktf.json` - CDKTF app configuration, points to sample project
+- `cdktf.json` - CDKTF app configuration, points to the examples project
 - `Directory.Packages.props` - Central package versions (CDKTF 0.21.0, JSII 1.112.0)
 - Solution targets .NET 8.0 throughout
 
 ## Development Guidelines
 
 ### When Adding New Providers
-1. Update `cdktf.json` with the desired provider/version.
-2. Run the scaffold helper once so the deterministic `.fsproj` is created:
-   `dotnet run --project tools/Nelknet.Cdktf.ProviderManager -- scaffold --provider-id <id> --source <publisher/name> --version <x.y.z>`
-3. Regenerate bindings with `npm install` (if dependencies changed) and `dotnet build -p:ForceCodeGen=true`.
-4. Commit only the handwritten pieces (`cdktf.json`, the new `.fsproj`, docs). Generated files remain ignored.
+1. Run `cdktf provider add <publisher/name>@=<version> --language csharp --force-local` to update `cdktf.json` and download bindings.
+2. Scaffold any missing provider projects with `dotnet fsi tools/scaffold-providers.fsx`.
+3. Add the new `.fsproj` (and optionally `generated/<id>/<id>.csproj`) to `Nelknet.Cdktf.slnx`.
+4. Regenerate bindings with `dotnet build -p:ForceCodeGen=true`.
+5. Commit only the handcrafted pieces (`cdktf.json`, the new `.fsproj`, docs). Generated files remain ignored.
 
 ### Code Generation Strategy
 - Using Fabulous.AST (not Myriad) for a simple build pipeline.
