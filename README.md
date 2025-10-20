@@ -1,6 +1,12 @@
 # Nelknet.Cdktf
 
-F# computation expressions and helpers that sit on top of the CDK for Terraform (CDKTF) .NET bindings.  The library is generated directly from a provider’s JSII schema so the surface stays in sync with the official SDKs while feeling idiomatic in F# (maps as sequences, arrays as sequences, boolean flags as `bool`, etc.).
+[![NuGet](https://img.shields.io/nuget/v/Nelknet.Cdktf.Core.svg?style=flat-square&label=Nelknet.Cdktf.Core)](https://www.nuget.org/packages/Nelknet.Cdktf.Core/)
+[![NuGet](https://img.shields.io/nuget/v/Nelknet.Cdktf.Providers.Aws.svg?style=flat-square&label=AWS)](https://www.nuget.org/packages/Nelknet.Cdktf.Providers.Aws/)
+[![NuGet](https://img.shields.io/nuget/v/Nelknet.Cdktf.Providers.Azurerm.svg?style=flat-square&label=Azure)](https://www.nuget.org/packages/Nelknet.Cdktf.Providers.Azurerm/)
+[![NuGet](https://img.shields.io/nuget/v/Nelknet.Cdktf.Providers.Hcloud.svg?style=flat-square&label=Hetzner)](https://www.nuget.org/packages/Nelknet.Cdktf.Providers.Hcloud/)
+[![NuGet](https://img.shields.io/nuget/v/Nelknet.Cdktf.Providers.Random.svg?style=flat-square&label=Random)](https://www.nuget.org/packages/Nelknet.Cdktf.Providers.Random/)
+
+F# computation expressions and helpers that sit on top of the CDK for Terraform (CDKTF) .NET bindings.  The library is generated directly from a provider's JSII schema so the surface stays in sync with the official SDKs while feeling idiomatic in F# (maps as sequences, arrays as sequences, boolean flags as `bool`, etc.).
 
 ## Highlights
 

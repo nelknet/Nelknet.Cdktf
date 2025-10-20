@@ -12,6 +12,9 @@
     <PackageTags>cdktf;terraform;fsharp</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/nelknet/Nelknet.Cdktf</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/nelknet/Nelknet.Cdktf</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Core.fs" />

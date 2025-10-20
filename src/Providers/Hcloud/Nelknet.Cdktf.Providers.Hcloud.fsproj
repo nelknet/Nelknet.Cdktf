@@ -13,7 +13,9 @@
     <PackageTags>cdktf;terraform;fsharp;hcloud</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+    <RepositoryUrl>https://github.com/nelknet/Nelknet.Cdktf</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/nelknet/Nelknet.Cdktf</PackageProjectUrl>  </PropertyGroup>
   <PropertyGroup>
     <ProviderId>hcloud</ProviderId>
     <ProviderModule>Hcloud</ProviderModule>

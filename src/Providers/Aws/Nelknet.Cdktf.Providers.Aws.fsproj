@@ -13,7 +13,9 @@
     <PackageTags>cdktf;terraform;fsharp;aws</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+    <RepositoryUrl>https://github.com/nelknet/Nelknet.Cdktf</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/nelknet/Nelknet.Cdktf</PackageProjectUrl>  </PropertyGroup>
   <PropertyGroup>
     <ProviderId>aws</ProviderId>
     <ProviderModule>Aws</ProviderModule>

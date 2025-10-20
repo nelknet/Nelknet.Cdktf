@@ -18,6 +18,9 @@
     <Project Path="src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
   </Folder>
   <Folder Name="/src/Providers/" />
+  <Folder Name="/src/Providers/Azurerm/">
+    <Project Path="src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj" />
+  </Folder>
   <Folder Name="/src/Providers/Hcloud/">
     <Project Path="src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj" />
   </Folder>
