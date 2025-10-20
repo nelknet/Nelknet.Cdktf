@@ -10,6 +10,10 @@ F# computation expressions and helpers that sit on top of the CDK for Terraform 
 
 ## Highlights
 
+
+https://github.com/user-attachments/assets/8d1e7dd7-f04a-4114-8eae-63253d8f495c
+
+
 - **Schema‑driven generation** – provider projects carry MSBuild metadata; `dotnet build` (or `dotnet build -p:ForceCodeGen=true`) regenerates `src/Providers/<Provider>/Generated/...` on the fly and the generated files stay out of git.
 - **F#‑friendly operations** – Terraform maps become `seq<string * string>`, repeated fields accept `seq<'T>`, and common unions (e.g., `bool | cdktf.IResolvable`) expose overloads so you don’t have to pass `obj`.
 - **Compile-time required checks** – generated builders track required custom operations with phantom types (`Missing`/`Present`), so omitting a mandatory field (e.g., `name`, `server_type`) produces a compile-time `CompilerMessage` error instead of a runtime failure.
