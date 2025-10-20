@@ -4,12 +4,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/generated/">
-    <Project Path="generated/aws/aws.csproj" />
-    <Project Path="generated/azurerm/azurerm.csproj" />
-    <Project Path="generated/hcloud/hcloud.csproj" />
-    <Project Path="generated/random/random.csproj" />
-  </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/Nelknet.Cdktf.Examples/Nelknet.Cdktf.Examples.fsproj" />
   </Folder>
