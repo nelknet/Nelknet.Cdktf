@@ -70,10 +70,10 @@ jobs:
 
           if [ -n "${GPG_PASSPHRASE}" ]; then
             mkdir -p ~/.local/bin
-            cat <<'EOF' > ~/.local/bin/gpg-wrapper
-#!/usr/bin/env bash
-exec gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" "$@"
-EOF
+            {
+              printf '%s\n' '#!/usr/bin/env bash'
+              printf '%s\n' 'exec gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" "$@"'
+            } > ~/.local/bin/gpg-wrapper
             chmod +x ~/.local/bin/gpg-wrapper
             echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -s --sign --output /tmp/gpg-test.asc --detach-sign .github/workflows/regenerate.yml
             rm /tmp/gpg-test.asc
