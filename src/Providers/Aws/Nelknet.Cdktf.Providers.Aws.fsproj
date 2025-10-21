@@ -33,7 +33,6 @@
     <!-- Reference the generated provider project -->
     <ProjectReference Include="$(ProviderPackageDir)/aws.csproj"
                       Condition="Exists('$(ProviderPackageDir)/aws.csproj')"
-                      ReferenceOutputAssembly="false"
                       Pack="false" />
     <!-- Ensure CodeGen project is built before running generation -->
     <ProjectReference Include="$(RepoRoot)tools/Nelknet.Cdktf.CodeGen/Nelknet.Cdktf.CodeGen.fsproj"
