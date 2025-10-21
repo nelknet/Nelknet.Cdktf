@@ -66,10 +66,12 @@ let private parseProvider (entry: string) =
                            Namespace = ns }
 
 let private loadProviders (repoRoot: string) =
+    // Resolve the manifest from the repository root (cdktf CLI uses it to know which providers to hydrate)
     let manifestPath = Path.Combine(repoRoot, "cdktf.json")
     if not (File.Exists(manifestPath)) then
         failwith $"cdktf.json not found at {manifestPath}"
 
+    // Parse the manifest so we can corelate provider ids and versions
     let json = JsonNode.Parse(File.ReadAllText(manifestPath))
     if isNull json then
         failwith "Unable to parse cdktf.json"
@@ -84,6 +86,7 @@ let private loadProviders (repoRoot: string) =
         |> Seq.toList
 
 let private runProcess (workingDir: string) (fileName: string) (args: string list) =
+    // Helper that mirrors the commands our CI workflow runs, capturing output for diagnostics
     use proc = new Process()
     let psi = proc.StartInfo
     psi.WorkingDirectory <- workingDir
@@ -225,6 +228,8 @@ let private finalizeProvider (repoRoot: string) (provider: Provider) =
     let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
     Directory.CreateDirectory(providerDir) |> ignore
 
+    // The raw cdktf output contains settings that clash with the solution (framework, CPM, etc.)
+    // so we normalize the project before sticking it into the build graph.
     normalizeGeneratedProject repoRoot provider.Id
 
     let versionMarker = Path.Combine(providerDir, ".version")
@@ -232,6 +237,7 @@ let private finalizeProvider (repoRoot: string) (provider: Provider) =
 
     let projectPath = Path.Combine(providerDir, $"{provider.Id}.csproj")
     if File.Exists(projectPath) then
+        // Build once to make sure restore succeeds with our centrally managed packages
         runProcess (Path.GetDirectoryName(projectPath)) "dotnet" ["build"; "-c"; "Debug"] |> ignore
 
 
@@ -281,6 +287,7 @@ let main argv =
             printfn "Found %d providers in cdktf.json" providers.Length
 
             // Check if any provider needs updating or if F# projects are missing
+            // Identify providers that either need their raw bindings refreshed or the F# surface regenerated
             let providersNeedingWork =
                 providers
                 |> List.filter (fun p ->
@@ -303,6 +310,7 @@ let main argv =
                     runProcess repoRoot "npm" ["install"] |> ignore
 
                 printfn "\n--- Running cdktf get ---"
+                // One shot download of the providers referenced in cdktf.json; skipping post-processing (versions, etc.)
                 runProcess repoRoot (locateCdktf repoRoot) ["get"; "--language"; "csharp"; "--force-local"] |> ignore
 
                 for provider in providersNeedingWork do
