@@ -1,0 +1,52 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace azurerm.SentinelAlertRuleNrt
+{
+    [JsiiInterface(nativeType: typeof(ISentinelAlertRuleNrtEntityMapping), fullyQualifiedName: "azurerm.sentinelAlertRuleNrt.SentinelAlertRuleNrtEntityMapping")]
+    public interface ISentinelAlertRuleNrtEntityMapping
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/sentinel_alert_rule_nrt#entity_type SentinelAlertRuleNrt#entity_type}.</summary>
+        [JsiiProperty(name: "entityType", typeJson: "{\"primitive\":\"string\"}")]
+        string EntityType
+        {
+            get;
+        }
+
+        /// <summary>field_mapping block.</summary>
+        /// <remarks>
+        /// Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/sentinel_alert_rule_nrt#field_mapping SentinelAlertRuleNrt#field_mapping}
+        /// </remarks>
+        [JsiiProperty(name: "fieldMapping", typeJson: "{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"azurerm.sentinelAlertRuleNrt.SentinelAlertRuleNrtEntityMappingFieldMapping\"},\"kind\":\"array\"}}]}}")]
+        object FieldMapping
+        {
+            get;
+        }
+
+        [JsiiTypeProxy(nativeType: typeof(ISentinelAlertRuleNrtEntityMapping), fullyQualifiedName: "azurerm.sentinelAlertRuleNrt.SentinelAlertRuleNrtEntityMapping")]
+        internal sealed class _Proxy : DeputyBase, azurerm.SentinelAlertRuleNrt.ISentinelAlertRuleNrtEntityMapping
+        {
+            private _Proxy(ByRefValue reference): base(reference)
+            {
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/sentinel_alert_rule_nrt#entity_type SentinelAlertRuleNrt#entity_type}.</summary>
+            [JsiiProperty(name: "entityType", typeJson: "{\"primitive\":\"string\"}")]
+            public string EntityType
+            {
+                get => GetInstanceProperty<string>()!;
+            }
+
+            /// <summary>field_mapping block.</summary>
+            /// <remarks>
+            /// Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/sentinel_alert_rule_nrt#field_mapping SentinelAlertRuleNrt#field_mapping}
+            /// </remarks>
+            [JsiiProperty(name: "fieldMapping", typeJson: "{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"azurerm.sentinelAlertRuleNrt.SentinelAlertRuleNrtEntityMappingFieldMapping\"},\"kind\":\"array\"}}]}}")]
+            public object FieldMapping
+            {
+                get => GetInstanceProperty<object>()!;
+            }
+        }
+    }
+}

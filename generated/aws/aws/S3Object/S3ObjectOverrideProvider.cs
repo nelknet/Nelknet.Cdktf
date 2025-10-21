@@ -1,0 +1,22 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.S3Object
+{
+    [JsiiByValue(fqn: "aws.s3Object.S3ObjectOverrideProvider")]
+    public class S3ObjectOverrideProvider : aws.S3Object.IS3ObjectOverrideProvider
+    {
+        /// <summary>default_tags block.</summary>
+        /// <remarks>
+        /// Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/s3_object#default_tags S3Object#default_tags}
+        /// </remarks>
+        [JsiiOptional]
+        [JsiiProperty(name: "defaultTags", typeJson: "{\"fqn\":\"aws.s3Object.S3ObjectOverrideProviderDefaultTags\"}", isOptional: true)]
+        public aws.S3Object.IS3ObjectOverrideProviderDefaultTags? DefaultTags
+        {
+            get;
+            set;
+        }
+    }
+}

@@ -1,0 +1,50 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace azurerm.EventgridEventSubscription
+{
+    #pragma warning disable CS8618
+
+    [JsiiByValue(fqn: "azurerm.eventgridEventSubscription.EventgridEventSubscriptionAdvancedFilterNumberInRange")]
+    public class EventgridEventSubscriptionAdvancedFilterNumberInRange : azurerm.EventgridEventSubscription.IEventgridEventSubscriptionAdvancedFilterNumberInRange
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/eventgrid_event_subscription#key EventgridEventSubscription#key}.</summary>
+        [JsiiProperty(name: "key", typeJson: "{\"primitive\":\"string\"}")]
+        public string Key
+        {
+            get;
+            set;
+        }
+
+        private object _values;
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/eventgrid_event_subscription#values EventgridEventSubscription#values}.</summary>
+        [JsiiProperty(name: "values", typeJson: "{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"collection\":{\"elementtype\":{\"primitive\":\"number\"},\"kind\":\"array\"}},\"kind\":\"array\"}}]}}")]
+        public object Values
+        {
+            get => _values;
+            set
+            {
+                if (Amazon.JSII.Runtime.Configuration.RuntimeTypeChecking)
+                {
+                    switch (value)
+                    {
+                        case HashiCorp.Cdktf.IResolvable cast_cd4240:
+                            break;
+                        case double[][] cast_cd4240:
+                            break;
+                        case Amazon.JSII.Runtime.Deputy.AnonymousObject cast_cd4240:
+                            // Not enough information to type-check...
+                            break;
+                        case null:
+                            throw new System.ArgumentException($"Expected {nameof(value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, double[][]; received null", nameof(value));
+                        default:
+                            throw new System.ArgumentException($"Expected {nameof(value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, double[][]; received {value.GetType().FullName}", nameof(value));
+                    }
+                }
+                _values = value;
+            }
+        }
+    }
+}

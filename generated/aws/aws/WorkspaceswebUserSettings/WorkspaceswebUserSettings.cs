@@ -1,0 +1,360 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.WorkspaceswebUserSettings
+{
+    /// <summary>Represents a {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/workspacesweb_user_settings aws_workspacesweb_user_settings}.</summary>
+    [JsiiClass(nativeType: typeof(aws.WorkspaceswebUserSettings.WorkspaceswebUserSettings), fullyQualifiedName: "aws.workspaceswebUserSettings.WorkspaceswebUserSettings", parametersJson: "[{\"docs\":{\"summary\":\"The scope in which to define this construct.\"},\"name\":\"scope\",\"type\":{\"fqn\":\"constructs.Construct\"}},{\"docs\":{\"remarks\":\"Must be unique amongst siblings in the same scope\",\"summary\":\"The scoped construct ID.\"},\"name\":\"id\",\"type\":{\"primitive\":\"string\"}},{\"name\":\"config\",\"type\":{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsConfig\"}}]")]
+    public class WorkspaceswebUserSettings : HashiCorp.Cdktf.TerraformResource
+    {
+        /// <summary>Create a new {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/workspacesweb_user_settings aws_workspacesweb_user_settings} Resource.</summary>
+        /// <param name="scope">The scope in which to define this construct.</param>
+        /// <param name="id">The scoped construct ID.</param>
+        public WorkspaceswebUserSettings(Constructs.Construct scope, string id, aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsConfig config): base(_MakeDeputyProps(scope, id, config))
+        {
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        private static DeputyProps _MakeDeputyProps(Constructs.Construct scope, string id, aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsConfig config)
+        {
+            return new DeputyProps(new object?[]{scope, id, config});
+        }
+
+        /// <summary>Used by jsii to construct an instance of this class from a Javascript-owned object reference</summary>
+        /// <param name="reference">The Javascript-owned object reference</param>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        protected WorkspaceswebUserSettings(ByRefValue reference): base(reference)
+        {
+        }
+
+        /// <summary>Used by jsii to construct an instance of this class from DeputyProps</summary>
+        /// <param name="props">The deputy props</param>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        protected WorkspaceswebUserSettings(DeputyProps props): base(props)
+        {
+        }
+
+        /// <summary>Generates CDKTF code for importing a WorkspaceswebUserSettings resource upon running "cdktf plan &lt;stack-name&gt;".</summary>
+        /// <param name="scope">The scope in which to define this construct.</param>
+        /// <param name="importToId">The construct id used in the generated config for the WorkspaceswebUserSettings to import.</param>
+        /// <param name="importFromId">The id of the existing WorkspaceswebUserSettings that should be imported.</param>
+        /// <param name="provider">? Optional instance of the provider where the WorkspaceswebUserSettings to import is found.</param>
+        [JsiiMethod(name: "generateConfigForImport", returnsJson: "{\"type\":{\"fqn\":\"cdktf.ImportableResource\"}}", parametersJson: "[{\"docs\":{\"summary\":\"The scope in which to define this construct.\"},\"name\":\"scope\",\"type\":{\"fqn\":\"constructs.Construct\"}},{\"docs\":{\"summary\":\"The construct id used in the generated config for the WorkspaceswebUserSettings to import.\"},\"name\":\"importToId\",\"type\":{\"primitive\":\"string\"}},{\"docs\":{\"remarks\":\"Refer to the {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/workspacesweb_user_settings#import import section} in the documentation of this resource for the id to use\",\"summary\":\"The id of the existing WorkspaceswebUserSettings that should be imported.\"},\"name\":\"importFromId\",\"type\":{\"primitive\":\"string\"}},{\"docs\":{\"summary\":\"? Optional instance of the provider where the WorkspaceswebUserSettings to import is found.\"},\"name\":\"provider\",\"optional\":true,\"type\":{\"fqn\":\"cdktf.TerraformProvider\"}}]")]
+        public static HashiCorp.Cdktf.ImportableResource GenerateConfigForImport(Constructs.Construct scope, string importToId, string importFromId, HashiCorp.Cdktf.TerraformProvider? provider = null)
+        {
+            return InvokeStaticMethod<HashiCorp.Cdktf.ImportableResource>(typeof(aws.WorkspaceswebUserSettings.WorkspaceswebUserSettings), new System.Type[]{typeof(Constructs.Construct), typeof(string), typeof(string), typeof(HashiCorp.Cdktf.TerraformProvider)}, new object?[]{scope, importToId, importFromId, provider})!;
+        }
+
+        [JsiiMethod(name: "putCookieSynchronizationConfiguration", parametersJson: "[{\"name\":\"value\",\"type\":{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsCookieSynchronizationConfiguration\"},\"kind\":\"array\"}}]}}}]")]
+        public virtual void PutCookieSynchronizationConfiguration(object @value)
+        {
+            if (Amazon.JSII.Runtime.Configuration.RuntimeTypeChecking)
+            {
+                switch (@value)
+                {
+                    case HashiCorp.Cdktf.IResolvable cast_2ed7d7:
+                        break;
+                    case aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsCookieSynchronizationConfiguration[] cast_2ed7d7:
+                        break;
+                    case Amazon.JSII.Runtime.Deputy.AnonymousObject cast_2ed7d7:
+                        // Not enough information to type-check...
+                        break;
+                    case null:
+                        throw new System.ArgumentException($"Expected argument {nameof(@value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, {typeof(aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsCookieSynchronizationConfiguration).FullName}[]; received null", nameof(@value));
+                    default:
+                        throw new System.ArgumentException($"Expected argument {nameof(@value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, {typeof(aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsCookieSynchronizationConfiguration).FullName}[]; received {@value.GetType().FullName}", nameof(@value));
+                }
+            }
+            InvokeInstanceVoidMethod(new System.Type[]{typeof(object)}, new object[]{@value});
+        }
+
+        [JsiiMethod(name: "putToolbarConfiguration", parametersJson: "[{\"name\":\"value\",\"type\":{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsToolbarConfiguration\"},\"kind\":\"array\"}}]}}}]")]
+        public virtual void PutToolbarConfiguration(object @value)
+        {
+            if (Amazon.JSII.Runtime.Configuration.RuntimeTypeChecking)
+            {
+                switch (@value)
+                {
+                    case HashiCorp.Cdktf.IResolvable cast_2ed7d7:
+                        break;
+                    case aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsToolbarConfiguration[] cast_2ed7d7:
+                        break;
+                    case Amazon.JSII.Runtime.Deputy.AnonymousObject cast_2ed7d7:
+                        // Not enough information to type-check...
+                        break;
+                    case null:
+                        throw new System.ArgumentException($"Expected argument {nameof(@value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, {typeof(aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsToolbarConfiguration).FullName}[]; received null", nameof(@value));
+                    default:
+                        throw new System.ArgumentException($"Expected argument {nameof(@value)} to be one of: {typeof(HashiCorp.Cdktf.IResolvable).FullName}, {typeof(aws.WorkspaceswebUserSettings.IWorkspaceswebUserSettingsToolbarConfiguration).FullName}[]; received {@value.GetType().FullName}", nameof(@value));
+                }
+            }
+            InvokeInstanceVoidMethod(new System.Type[]{typeof(object)}, new object[]{@value});
+        }
+
+        [JsiiMethod(name: "resetAdditionalEncryptionContext")]
+        public virtual void ResetAdditionalEncryptionContext()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetCookieSynchronizationConfiguration")]
+        public virtual void ResetCookieSynchronizationConfiguration()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetCustomerManagedKey")]
+        public virtual void ResetCustomerManagedKey()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetDeepLinkAllowed")]
+        public virtual void ResetDeepLinkAllowed()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetDisconnectTimeoutInMinutes")]
+        public virtual void ResetDisconnectTimeoutInMinutes()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetIdleDisconnectTimeoutInMinutes")]
+        public virtual void ResetIdleDisconnectTimeoutInMinutes()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetTags")]
+        public virtual void ResetTags()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "resetToolbarConfiguration")]
+        public virtual void ResetToolbarConfiguration()
+        {
+            InvokeInstanceVoidMethod(new System.Type[]{}, new object[]{});
+        }
+
+        [JsiiMethod(name: "synthesizeAttributes", returnsJson: "{\"type\":{\"collection\":{\"elementtype\":{\"primitive\":\"any\"},\"kind\":\"map\"}}}")]
+        protected override System.Collections.Generic.IDictionary<string, object> SynthesizeAttributes()
+        {
+            return InvokeInstanceMethod<System.Collections.Generic.IDictionary<string, object>>(new System.Type[]{}, new object[]{})!;
+        }
+
+        [JsiiMethod(name: "synthesizeHclAttributes", returnsJson: "{\"type\":{\"collection\":{\"elementtype\":{\"primitive\":\"any\"},\"kind\":\"map\"}}}")]
+        protected override System.Collections.Generic.IDictionary<string, object> SynthesizeHclAttributes()
+        {
+            return InvokeInstanceMethod<System.Collections.Generic.IDictionary<string, object>>(new System.Type[]{}, new object[]{})!;
+        }
+
+        [JsiiProperty(name: "tfResourceType", typeJson: "{\"primitive\":\"string\"}")]
+        public static string TfResourceType
+        {
+            get;
+        }
+        = GetStaticProperty<string>(typeof(aws.WorkspaceswebUserSettings.WorkspaceswebUserSettings))!;
+
+        [JsiiProperty(name: "associatedPortalArns", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"array\"}}")]
+        public virtual string[] AssociatedPortalArns
+        {
+            get => GetInstanceProperty<string[]>()!;
+        }
+
+        [JsiiProperty(name: "cookieSynchronizationConfiguration", typeJson: "{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsCookieSynchronizationConfigurationList\"}")]
+        public virtual aws.WorkspaceswebUserSettings.WorkspaceswebUserSettingsCookieSynchronizationConfigurationList CookieSynchronizationConfiguration
+        {
+            get => GetInstanceProperty<aws.WorkspaceswebUserSettings.WorkspaceswebUserSettingsCookieSynchronizationConfigurationList>()!;
+        }
+
+        [JsiiProperty(name: "tagsAll", typeJson: "{\"fqn\":\"cdktf.StringMap\"}")]
+        public virtual HashiCorp.Cdktf.StringMap TagsAll
+        {
+            get => GetInstanceProperty<HashiCorp.Cdktf.StringMap>()!;
+        }
+
+        [JsiiProperty(name: "toolbarConfiguration", typeJson: "{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsToolbarConfigurationList\"}")]
+        public virtual aws.WorkspaceswebUserSettings.WorkspaceswebUserSettingsToolbarConfigurationList ToolbarConfiguration
+        {
+            get => GetInstanceProperty<aws.WorkspaceswebUserSettings.WorkspaceswebUserSettingsToolbarConfigurationList>()!;
+        }
+
+        [JsiiProperty(name: "userSettingsArn", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string UserSettingsArn
+        {
+            get => GetInstanceProperty<string>()!;
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "additionalEncryptionContextInput", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"map\"}}", isOptional: true)]
+        public virtual System.Collections.Generic.IDictionary<string, string>? AdditionalEncryptionContextInput
+        {
+            get => GetInstanceProperty<System.Collections.Generic.IDictionary<string, string>?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "cookieSynchronizationConfigurationInput", typeJson: "{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsCookieSynchronizationConfiguration\"},\"kind\":\"array\"}}]}}", isOptional: true)]
+        public virtual object? CookieSynchronizationConfigurationInput
+        {
+            get => GetInstanceProperty<object?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "copyAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? CopyAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "customerManagedKeyInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? CustomerManagedKeyInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "deepLinkAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? DeepLinkAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "disconnectTimeoutInMinutesInput", typeJson: "{\"primitive\":\"number\"}", isOptional: true)]
+        public virtual double? DisconnectTimeoutInMinutesInput
+        {
+            get => GetInstanceProperty<double?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "downloadAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? DownloadAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "idleDisconnectTimeoutInMinutesInput", typeJson: "{\"primitive\":\"number\"}", isOptional: true)]
+        public virtual double? IdleDisconnectTimeoutInMinutesInput
+        {
+            get => GetInstanceProperty<double?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "pasteAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? PasteAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "printAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? PrintAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "tagsInput", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"map\"}}", isOptional: true)]
+        public virtual System.Collections.Generic.IDictionary<string, string>? TagsInput
+        {
+            get => GetInstanceProperty<System.Collections.Generic.IDictionary<string, string>?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "toolbarConfigurationInput", typeJson: "{\"union\":{\"types\":[{\"fqn\":\"cdktf.IResolvable\"},{\"collection\":{\"elementtype\":{\"fqn\":\"aws.workspaceswebUserSettings.WorkspaceswebUserSettingsToolbarConfiguration\"},\"kind\":\"array\"}}]}}", isOptional: true)]
+        public virtual object? ToolbarConfigurationInput
+        {
+            get => GetInstanceProperty<object?>();
+        }
+
+        [JsiiOptional]
+        [JsiiProperty(name: "uploadAllowedInput", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public virtual string? UploadAllowedInput
+        {
+            get => GetInstanceProperty<string?>();
+        }
+
+        [JsiiProperty(name: "additionalEncryptionContext", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"map\"}}")]
+        public virtual System.Collections.Generic.IDictionary<string, string> AdditionalEncryptionContext
+        {
+            get => GetInstanceProperty<System.Collections.Generic.IDictionary<string, string>>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "copyAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string CopyAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "customerManagedKey", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string CustomerManagedKey
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "deepLinkAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string DeepLinkAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "disconnectTimeoutInMinutes", typeJson: "{\"primitive\":\"number\"}")]
+        public virtual double DisconnectTimeoutInMinutes
+        {
+            get => GetInstanceProperty<double>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "downloadAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string DownloadAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "idleDisconnectTimeoutInMinutes", typeJson: "{\"primitive\":\"number\"}")]
+        public virtual double IdleDisconnectTimeoutInMinutes
+        {
+            get => GetInstanceProperty<double>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "pasteAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string PasteAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "printAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string PrintAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "tags", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"map\"}}")]
+        public virtual System.Collections.Generic.IDictionary<string, string> Tags
+        {
+            get => GetInstanceProperty<System.Collections.Generic.IDictionary<string, string>>()!;
+            set => SetInstanceProperty(value);
+        }
+
+        [JsiiProperty(name: "uploadAllowed", typeJson: "{\"primitive\":\"string\"}")]
+        public virtual string UploadAllowed
+        {
+            get => GetInstanceProperty<string>()!;
+            set => SetInstanceProperty(value);
+        }
+    }
+}

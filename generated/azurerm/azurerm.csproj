@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Package Identification -->
+    <Description>azurerm</Description>
+    <PackageId>azurerm</PackageId>
+    <PackageLicenseExpression>UNLICENSED</PackageLicenseExpression>
+    <PackageVersion>0.0.0</PackageVersion>
+    <!-- Additional Metadata -->
+    <Authors>generated@generated.com</Authors>
+    <Language>en-US</Language>
+    <ProjectUrl>http://generated</ProjectUrl>
+    <RepositoryUrl>http://generated</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- Build Configuration -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <Nullable>annotations</Nullable>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>0612,0618,1573,1587,1591,8600,8602,8618,8632</NoWarn>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Amazon.JSII.Runtime" />
+    <PackageReference Include="HashiCorp.Cdktf" />
+    <PackageReference Include="Constructs" />
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- Silence [Obsolete] warnings -->
+    <NoWarn>0612,0618</NoWarn>
+    <!-- Treat warnings symptomatic of code generation bugs as errors -->
+    <WarningsAsErrors>0108,0109</WarningsAsErrors>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Nullable>annotations</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="azurerm/**/*.cs" />
+  </ItemGroup>
+</Project>

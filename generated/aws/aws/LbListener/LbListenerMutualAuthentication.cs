@@ -1,0 +1,69 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.LbListener
+{
+    #pragma warning disable CS8618
+
+    [JsiiByValue(fqn: "aws.lbListener.LbListenerMutualAuthentication")]
+    public class LbListenerMutualAuthentication : aws.LbListener.ILbListenerMutualAuthentication
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/lb_listener#mode LbListener#mode}.</summary>
+        [JsiiProperty(name: "mode", typeJson: "{\"primitive\":\"string\"}")]
+        public string Mode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/lb_listener#advertise_trust_store_ca_names LbListener#advertise_trust_store_ca_names}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "advertiseTrustStoreCaNames", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? AdvertiseTrustStoreCaNames
+        {
+            get;
+            set;
+        }
+
+        private object? _ignoreClientCertificateExpiry;
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/lb_listener#ignore_client_certificate_expiry LbListener#ignore_client_certificate_expiry}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "ignoreClientCertificateExpiry", typeJson: "{\"union\":{\"types\":[{\"primitive\":\"boolean\"},{\"fqn\":\"cdktf.IResolvable\"}]}}", isOptional: true)]
+        public object? IgnoreClientCertificateExpiry
+        {
+            get => _ignoreClientCertificateExpiry;
+            set
+            {
+                if (Amazon.JSII.Runtime.Configuration.RuntimeTypeChecking)
+                {
+                    switch (value)
+                    {
+                        case bool cast_cd4240:
+                            break;
+                        case HashiCorp.Cdktf.IResolvable cast_cd4240:
+                            break;
+                        case Amazon.JSII.Runtime.Deputy.AnonymousObject cast_cd4240:
+                            // Not enough information to type-check...
+                            break;
+                        case null:
+                            break;
+                        default:
+                            throw new System.ArgumentException($"Expected {nameof(value)} to be one of: bool, {typeof(HashiCorp.Cdktf.IResolvable).FullName}; received {value.GetType().FullName}", nameof(value));
+                    }
+                }
+                _ignoreClientCertificateExpiry = value;
+            }
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/lb_listener#trust_store_arn LbListener#trust_store_arn}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "trustStoreArn", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? TrustStoreArn
+        {
+            get;
+            set;
+        }
+    }
+}

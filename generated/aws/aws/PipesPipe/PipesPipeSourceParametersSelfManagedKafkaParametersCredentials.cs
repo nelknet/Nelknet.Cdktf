@@ -1,0 +1,46 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.PipesPipe
+{
+    [JsiiByValue(fqn: "aws.pipesPipe.PipesPipeSourceParametersSelfManagedKafkaParametersCredentials")]
+    public class PipesPipeSourceParametersSelfManagedKafkaParametersCredentials : aws.PipesPipe.IPipesPipeSourceParametersSelfManagedKafkaParametersCredentials
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/pipes_pipe#basic_auth PipesPipe#basic_auth}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "basicAuth", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? BasicAuth
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/pipes_pipe#client_certificate_tls_auth PipesPipe#client_certificate_tls_auth}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "clientCertificateTlsAuth", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? ClientCertificateTlsAuth
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/pipes_pipe#sasl_scram_256_auth PipesPipe#sasl_scram_256_auth}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "saslScram256Auth", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? SaslScram256Auth
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/pipes_pipe#sasl_scram_512_auth PipesPipe#sasl_scram_512_auth}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "saslScram512Auth", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? SaslScram512Auth
+        {
+            get;
+            set;
+        }
+    }
+}

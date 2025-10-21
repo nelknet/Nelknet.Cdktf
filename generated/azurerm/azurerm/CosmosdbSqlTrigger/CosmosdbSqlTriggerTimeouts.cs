@@ -1,0 +1,46 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace azurerm.CosmosdbSqlTrigger
+{
+    [JsiiByValue(fqn: "azurerm.cosmosdbSqlTrigger.CosmosdbSqlTriggerTimeouts")]
+    public class CosmosdbSqlTriggerTimeouts : azurerm.CosmosdbSqlTrigger.ICosmosdbSqlTriggerTimeouts
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/cosmosdb_sql_trigger#create CosmosdbSqlTrigger#create}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "create", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? Create
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/cosmosdb_sql_trigger#delete CosmosdbSqlTrigger#delete}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "delete", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? Delete
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/cosmosdb_sql_trigger#read CosmosdbSqlTrigger#read}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "read", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? Read
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/cosmosdb_sql_trigger#update CosmosdbSqlTrigger#update}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "update", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? Update
+        {
+            get;
+            set;
+        }
+    }
+}

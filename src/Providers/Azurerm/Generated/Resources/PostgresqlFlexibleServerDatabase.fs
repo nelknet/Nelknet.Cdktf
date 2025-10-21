@@ -1,0 +1,74 @@
+namespace Nelknet.Cdktf.Providers
+open System
+open System.Collections.Generic
+open HashiCorp.Cdktf
+open Nelknet.Cdktf
+open Nelknet.Cdktf.Internal
+type PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId> = { assignments: ResizeArray<azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabaseConfig -> unit> }
+    /// <summary>
+    /// Represents a <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database">azurerm_postgresql_flexible_server_database</a>.
+    /// </summary>
+    type PostgresqlFlexibleServerDatabaseBuilder(logicalId: string) =
+        member _.Yield(_: unit) : PostgresqlFlexibleServerDatabaseState<Missing, Missing> =
+            ({ assignments = ResizeArray() } : PostgresqlFlexibleServerDatabaseState<Missing, Missing>)
+
+        member _.Zero(()) : PostgresqlFlexibleServerDatabaseState<Missing, Missing> =
+            ({ assignments = ResizeArray() } : PostgresqlFlexibleServerDatabaseState<Missing, Missing>)
+
+        /// <summary>
+        /// Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#name-1">PostgresqlFlexibleServerDatabase#name</a>.
+        /// </summary>
+        [<CustomOperation "name">]
+        member _.Name(state: PostgresqlFlexibleServerDatabaseState<Missing, 'ServerId>, value: string) : PostgresqlFlexibleServerDatabaseState<Present, 'ServerId> =
+            state.assignments.Add(fun config -> config.Name <- value)
+            ({ assignments = state.assignments } : PostgresqlFlexibleServerDatabaseState<Present, 'ServerId>)
+
+        /// <summary>
+        /// Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#server_id-1">PostgresqlFlexibleServerDatabase#server_id</a>.
+        /// </summary>
+        [<CustomOperation "server_id">]
+        member _.ServerId(state: PostgresqlFlexibleServerDatabaseState<'Name, Missing>, value: string) : PostgresqlFlexibleServerDatabaseState<'Name, Present> =
+            state.assignments.Add(fun config -> config.ServerId <- value)
+            ({ assignments = state.assignments } : PostgresqlFlexibleServerDatabaseState<'Name, Present>)
+
+        /// <summary>
+        /// Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#charset-1">PostgresqlFlexibleServerDatabase#charset</a>.
+        /// </summary>
+        [<CustomOperation "charset">]
+        member _.Charset(state: PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>, value: string) : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId> =
+            state.assignments.Add(fun config -> config.Charset <- value)
+            state : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>
+
+        /// <summary>
+        /// Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#collation-1">PostgresqlFlexibleServerDatabase#collation</a>.
+        /// </summary>
+        [<CustomOperation "collation">]
+        member _.Collation(state: PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>, value: string) : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId> =
+            state.assignments.Add(fun config -> config.Collation <- value)
+            state : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>
+
+        /// <summary>
+        /// Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#id-1">PostgresqlFlexibleServerDatabase#id</a>. Please be aware that the id field is automatically added to all resources in Terraform providers using a Terraform provider SDK version below 2. If you experience problems setting this value it might not be settable. Please take a look at the provider documentation to ensure it should be settable.
+        /// </summary>
+        [<CustomOperation "id">]
+        member _.Id(state: PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>, value: string) : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId> =
+            state.assignments.Add(fun config -> config.Id <- value)
+            state : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>
+
+        /// <summary>
+        /// timeouts block. Docs at Terraform Registry: <a href="https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/postgresql_flexible_server_database#timeouts-1">PostgresqlFlexibleServerDatabase#timeouts</a>
+        /// </summary>
+        [<CustomOperation "timeouts">]
+        member _.Timeouts(state: PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>, value: azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabaseTimeouts) : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId> =
+            state.assignments.Add(fun config -> config.Timeouts <- value)
+            state : PostgresqlFlexibleServerDatabaseState<'Name, 'ServerId>
+
+        member _.Run(state: PostgresqlFlexibleServerDatabaseState<Present, Present>) : azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabase =
+            let config = azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabaseConfig()
+            for setter in state.assignments do
+                setter config
+            azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabase(StackContext.get (), logicalId, config)
+
+        [<CompilerMessage("Azurerm.postgresqlFlexibleServerDatabase: missing required arguments. Must call: name, server_id.", 9999, IsError = true)>]
+        member _.Run(_: PostgresqlFlexibleServerDatabaseState<_, _>) : azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabase =
+            Unchecked.defaultof<azurerm.PostgresqlFlexibleServerDatabase.PostgresqlFlexibleServerDatabase>

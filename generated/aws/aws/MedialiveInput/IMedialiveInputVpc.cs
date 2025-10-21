@@ -1,0 +1,51 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.MedialiveInput
+{
+    [JsiiInterface(nativeType: typeof(IMedialiveInputVpc), fullyQualifiedName: "aws.medialiveInput.MedialiveInputVpc")]
+    public interface IMedialiveInputVpc
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/medialive_input#subnet_ids MedialiveInput#subnet_ids}.</summary>
+        [JsiiProperty(name: "subnetIds", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"array\"}}")]
+        string[] SubnetIds
+        {
+            get;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/medialive_input#security_group_ids MedialiveInput#security_group_ids}.</summary>
+        [JsiiProperty(name: "securityGroupIds", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"array\"}}", isOptional: true)]
+        [Amazon.JSII.Runtime.Deputy.JsiiOptional]
+        string[]? SecurityGroupIds
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        [JsiiTypeProxy(nativeType: typeof(IMedialiveInputVpc), fullyQualifiedName: "aws.medialiveInput.MedialiveInputVpc")]
+        internal sealed class _Proxy : DeputyBase, aws.MedialiveInput.IMedialiveInputVpc
+        {
+            private _Proxy(ByRefValue reference): base(reference)
+            {
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/medialive_input#subnet_ids MedialiveInput#subnet_ids}.</summary>
+            [JsiiProperty(name: "subnetIds", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"array\"}}")]
+            public string[] SubnetIds
+            {
+                get => GetInstanceProperty<string[]>()!;
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/medialive_input#security_group_ids MedialiveInput#security_group_ids}.</summary>
+            [JsiiOptional]
+            [JsiiProperty(name: "securityGroupIds", typeJson: "{\"collection\":{\"elementtype\":{\"primitive\":\"string\"},\"kind\":\"array\"}}", isOptional: true)]
+            public string[]? SecurityGroupIds
+            {
+                get => GetInstanceProperty<string[]?>();
+            }
+        }
+    }
+}

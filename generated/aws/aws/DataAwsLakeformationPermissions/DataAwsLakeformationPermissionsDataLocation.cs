@@ -1,0 +1,29 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.DataAwsLakeformationPermissions
+{
+    #pragma warning disable CS8618
+
+    [JsiiByValue(fqn: "aws.dataAwsLakeformationPermissions.DataAwsLakeformationPermissionsDataLocation")]
+    public class DataAwsLakeformationPermissionsDataLocation : aws.DataAwsLakeformationPermissions.IDataAwsLakeformationPermissionsDataLocation
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/lakeformation_permissions#arn DataAwsLakeformationPermissions#arn}.</summary>
+        [JsiiProperty(name: "arn", typeJson: "{\"primitive\":\"string\"}")]
+        public string Arn
+        {
+            get;
+            set;
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/lakeformation_permissions#catalog_id DataAwsLakeformationPermissions#catalog_id}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "catalogId", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        public string? CatalogId
+        {
+            get;
+            set;
+        }
+    }
+}

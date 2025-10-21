@@ -1,0 +1,19 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace aws.Wafv2WebAcl
+{
+    [JsiiByValue(fqn: "aws.wafv2WebAcl.Wafv2WebAclCaptchaConfigImmunityTimeProperty")]
+    public class Wafv2WebAclCaptchaConfigImmunityTimeProperty : aws.Wafv2WebAcl.IWafv2WebAclCaptchaConfigImmunityTimeProperty
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/wafv2_web_acl#immunity_time Wafv2WebAcl#immunity_time}.</summary>
+        [JsiiOptional]
+        [JsiiProperty(name: "immunityTime", typeJson: "{\"primitive\":\"number\"}", isOptional: true)]
+        public double? ImmunityTime
+        {
+            get;
+            set;
+        }
+    }
+}

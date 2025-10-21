@@ -1,0 +1,94 @@
+using Amazon.JSII.Runtime.Deputy;
+
+#pragma warning disable CS0672,CS0809,CS1591
+
+namespace azurerm.MssqlDatabase
+{
+    [JsiiInterface(nativeType: typeof(IMssqlDatabaseLongTermRetentionPolicy), fullyQualifiedName: "azurerm.mssqlDatabase.MssqlDatabaseLongTermRetentionPolicy")]
+    public interface IMssqlDatabaseLongTermRetentionPolicy
+    {
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#monthly_retention MssqlDatabase#monthly_retention}.</summary>
+        [JsiiProperty(name: "monthlyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        [Amazon.JSII.Runtime.Deputy.JsiiOptional]
+        string? MonthlyRetention
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#weekly_retention MssqlDatabase#weekly_retention}.</summary>
+        [JsiiProperty(name: "weeklyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        [Amazon.JSII.Runtime.Deputy.JsiiOptional]
+        string? WeeklyRetention
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#week_of_year MssqlDatabase#week_of_year}.</summary>
+        [JsiiProperty(name: "weekOfYear", typeJson: "{\"primitive\":\"number\"}", isOptional: true)]
+        [Amazon.JSII.Runtime.Deputy.JsiiOptional]
+        double? WeekOfYear
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#yearly_retention MssqlDatabase#yearly_retention}.</summary>
+        [JsiiProperty(name: "yearlyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+        [Amazon.JSII.Runtime.Deputy.JsiiOptional]
+        string? YearlyRetention
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        [JsiiTypeProxy(nativeType: typeof(IMssqlDatabaseLongTermRetentionPolicy), fullyQualifiedName: "azurerm.mssqlDatabase.MssqlDatabaseLongTermRetentionPolicy")]
+        internal sealed class _Proxy : DeputyBase, azurerm.MssqlDatabase.IMssqlDatabaseLongTermRetentionPolicy
+        {
+            private _Proxy(ByRefValue reference): base(reference)
+            {
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#monthly_retention MssqlDatabase#monthly_retention}.</summary>
+            [JsiiOptional]
+            [JsiiProperty(name: "monthlyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+            public string? MonthlyRetention
+            {
+                get => GetInstanceProperty<string?>();
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#weekly_retention MssqlDatabase#weekly_retention}.</summary>
+            [JsiiOptional]
+            [JsiiProperty(name: "weeklyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+            public string? WeeklyRetention
+            {
+                get => GetInstanceProperty<string?>();
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#week_of_year MssqlDatabase#week_of_year}.</summary>
+            [JsiiOptional]
+            [JsiiProperty(name: "weekOfYear", typeJson: "{\"primitive\":\"number\"}", isOptional: true)]
+            public double? WeekOfYear
+            {
+                get => GetInstanceProperty<double?>();
+            }
+
+            /// <summary>Docs at Terraform Registry: {@link https://registry.terraform.io/providers/hashicorp/azurerm/4.1.0/docs/resources/mssql_database#yearly_retention MssqlDatabase#yearly_retention}.</summary>
+            [JsiiOptional]
+            [JsiiProperty(name: "yearlyRetention", typeJson: "{\"primitive\":\"string\"}", isOptional: true)]
+            public string? YearlyRetention
+            {
+                get => GetInstanceProperty<string?>();
+            }
+        }
+    }
+}
