@@ -7,6 +7,9 @@
     <PropertyGroup>
       <GeneratedOutputRoot Condition="'$(GeneratedOutputRoot)' == ''">$(MSBuildProjectDirectory)\Generated</GeneratedOutputRoot>
       <GeneratedFilePath Condition="'$(GeneratedFilePath)' == ''">$(GeneratedOutputRoot)\$(ProviderModule).Module.fs</GeneratedFilePath>
+      <_CodeGenConfiguration Condition="'$(CodeGenConfiguration)' != ''">$(CodeGenConfiguration)</_CodeGenConfiguration>
+      <_CodeGenConfiguration Condition="'$(_CodeGenConfiguration)' == '' and '$(Configuration)' != ''">$(Configuration)</_CodeGenConfiguration>
+      <_CodeGenConfiguration Condition="'$(_CodeGenConfiguration)' == ''">Debug</_CodeGenConfiguration>
     </PropertyGroup>
 
     <Error Condition="!Exists('$(ProviderPackageDir)')" Text="Provider package directory '$(ProviderPackageDir)' not found. Run the provider ensure step first." />
@@ -16,6 +19,6 @@
     </PropertyGroup>
 
     <Exec Condition="'$(_NeedsCodeGen)' == 'true' OR '$(ForceCodeGen)' == 'true'"
-          Command="dotnet run --no-build --project &quot;$(CodeGenTool)&quot; --provider-id &quot;$(ProviderId)&quot; --module-name &quot;$(ProviderModule)&quot; --namespace &quot;$(ProviderNamespace)&quot; --package-dir &quot;$(ProviderPackageDir)&quot; --output-root &quot;$(GeneratedOutputRoot)&quot;" />
+          Command="dotnet run --no-build --project &quot;$(CodeGenTool)&quot; --configuration &quot;$(_CodeGenConfiguration)&quot; -- --provider-id &quot;$(ProviderId)&quot; --module-name &quot;$(ProviderModule)&quot; --namespace &quot;$(ProviderNamespace)&quot; --package-dir &quot;$(ProviderPackageDir)&quot; --output-root &quot;$(GeneratedOutputRoot)&quot;" />
   </Target>
 </Project>

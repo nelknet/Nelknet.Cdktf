@@ -24,6 +24,19 @@
   <Folder Name="/src/Providers/Random/">
     <Project Path="src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj" />
   </Folder>
+  <Folder Name="/generated/" />
+  <Folder Name="/generated/azurerm/">
+    <Project Path="generated/azurerm/azurerm.csproj" />
+  </Folder>
+  <Folder Name="/generated/aws/">
+    <Project Path="generated/aws/aws.csproj" />
+  </Folder>
+  <Folder Name="/generated/hcloud/">
+    <Project Path="generated/hcloud/hcloud.csproj" />
+  </Folder>
+  <Folder Name="/generated/random/">
+    <Project Path="generated/random/random.csproj" />
+  </Folder>
   <Folder Name="/tools/" />
   <Folder Name="/tools/Nelknet.Cdktf.Bootstrap/">
     <Project Path="tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj" />
