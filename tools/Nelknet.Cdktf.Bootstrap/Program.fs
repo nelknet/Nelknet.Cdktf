@@ -137,21 +137,6 @@ let private locateCdktf (repoRoot: string) =
     let localCdktf = Path.Combine(repoRoot, "node_modules", ".bin", binaryName)
     if File.Exists(localCdktf) then localCdktf else "cdktf"
 
-let private downloadProviders (repoRoot: string) (providers: Provider list) =
-    let providerArgs =
-        providers
-        |> List.map (fun p -> $"{p.Source}@={p.Version}")
-        |> List.distinct
-
-    if providerArgs.IsEmpty then ()
-    else
-        let args =
-            [ "provider"; "add" ]
-            @ providerArgs
-            @ [ "--language"; "csharp"; "--force-local" ]
-
-        runProcess repoRoot (locateCdktf repoRoot) args |> ignore
-
 let private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
     let projectPath = Path.Combine(repoRoot, "generated", providerId, $"{providerId}.csproj")
     if not (File.Exists(projectPath)) then
@@ -310,30 +295,19 @@ let main argv =
                 printfn "Found %d provider(s) needing updates" providersNeedingWork.Length
 
                 // Ensure node_modules exist if we need to download
-                if providers |> List.exists (needsProviderDownload repoRoot) then
-                    let packageJson = Path.Combine(repoRoot, "package.json")
-                    let nodeModules = Path.Combine(repoRoot, "node_modules")
+                let packageJson = Path.Combine(repoRoot, "package.json")
+                let nodeModules = Path.Combine(repoRoot, "node_modules")
 
-                    if File.Exists(packageJson) && not (Directory.Exists(nodeModules)) then
-                        printfn "Running npm install to get cdktf CLI..."
-                        runProcess repoRoot "npm" ["install"] |> ignore
+                if File.Exists(packageJson) && not (Directory.Exists(nodeModules)) then
+                    printfn "Running npm install to get cdktf CLI..."
+                    runProcess repoRoot "npm" ["install"] |> ignore
 
-                let providersNeedingDownload =
-                    providersNeedingWork
-                    |> List.filter (needsProviderDownload repoRoot)
-
-                if not providersNeedingDownload.IsEmpty then
-                    printfn "\n--- Downloading providers ---"
-                    downloadProviders repoRoot providersNeedingDownload
+                printfn "\n--- Running cdktf get ---"
+                runProcess repoRoot (locateCdktf repoRoot) ["get"; "--language"; "csharp"; "--force-local"] |> ignore
 
                 for provider in providersNeedingWork do
                     printfn "\n--- Finalizing %s ---" provider.Id
-                    let requiresDownload =
-                        providersNeedingDownload
-                        |> List.exists (fun p -> StringComparer.OrdinalIgnoreCase.Equals(p.Id, provider.Id))
-
-                    if requiresDownload then
-                        finalizeProvider repoRoot provider
+                    finalizeProvider repoRoot provider
                     ensureProviderProject repoRoot provider
 
                 printfn "\n=== Bootstrap complete ==="
