@@ -15,7 +15,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/nelknet/Nelknet.Cdktf</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/nelknet/Nelknet.Cdktf</PackageProjectUrl>  </PropertyGroup>
+    <PackageProjectUrl>https://github.com/nelknet/Nelknet.Cdktf</PackageProjectUrl>
+  </PropertyGroup>
   <PropertyGroup>
     <ProviderId>hcloud</ProviderId>
     <ProviderModule>Hcloud</ProviderModule>
@@ -27,13 +28,11 @@
     <ProviderAssemblyPath>$(ProviderPackageDir)\bin\$(Configuration)\net8.0\hcloud.dll</ProviderAssemblyPath>
   </PropertyGroup>
   <Import Project="$(RepoRoot)build/CodeGen.targets" />
-
   <ItemGroup>
     <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
     <!-- Reference the generated provider project -->
     <ProjectReference Include="$(ProviderPackageDir)/hcloud.csproj"
                       Condition="Exists('$(ProviderPackageDir)/hcloud.csproj')"
-                      ReferenceOutputAssembly="false"
                       Pack="false" />
     <!-- Ensure CodeGen project is built before running generation -->
     <ProjectReference Include="$(RepoRoot)tools/Nelknet.Cdktf.CodeGen/Nelknet.Cdktf.CodeGen.fsproj"
@@ -43,12 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="$(ProviderId)" Condition="Exists('$(ProviderAssemblyPath)')">
-      <HintPath>$(ProviderAssemblyPath)</HintPath>
-      <Private>true</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ProviderAssemblyPath)"
@@ -65,12 +58,10 @@
     <Compile Include="Generated/Resources/**/*.fs" />
     <Compile Include="Generated/$(ProviderModule).Module.fs" />
   </ItemGroup>
-
   <Target Name="RemoveBundledBindingDependency" AfterTargets="GetPackageDependencies">
     <ItemGroup>
       <PackageDependencies Remove="@(PackageDependencies)"
                            Condition="'%(PackageDependencies.Identity)' == '$(ProviderId)'" />
     </ItemGroup>
   </Target>
-
 </Project>

@@ -80,24 +80,22 @@ let ensureProject (entry: string) =
                         Directory.CreateDirectory(providerDir) |> ignore
                         let projectPath = Path.Combine(providerDir, $"Nelknet.Cdktf.Providers.{moduleName}.fsproj")
 
-                        if File.Exists(projectPath) then
-                            None
-                        else
-                            let replacements =
-                                [ "{{ProviderId}}", providerId
-                                  "{{Module}}", moduleName
-                                  "{{Namespace}}", namespaceName
-                                  "{{NamespacePath}}", namespaceName.Replace('.', '/')
-                                  "{{PackageTags}}", $"cdktf;terraform;fsharp;{providerId}"
-                                  "{{Source}}", source
-                                  "{{Version}}", version ]
+                        let replacements =
+                            [ "{{ProviderId}}", providerId
+                              "{{Module}}", moduleName
+                              "{{Namespace}}", namespaceName
+                              "{{NamespacePath}}", namespaceName.Replace('.', '/')
+                              "{{PackageTags}}", $"cdktf;terraform;fsharp;{providerId}"
+                              "{{Source}}", source
+                              "{{Version}}", version ]
 
-                            let content =
-                                replacements
-                                |> List.fold (fun (acc: string) (key, value) -> acc.Replace(key, value)) (File.ReadAllText(templatePath))
+                        let content =
+                            replacements
+                            |> List.fold (fun (acc: string) (key, value) -> acc.Replace(key, value)) (File.ReadAllText(templatePath))
 
-                            File.WriteAllText(projectPath, content)
-                            Some projectPath
+                        let existed = File.Exists(projectPath)
+                        File.WriteAllText(projectPath, content)
+                        Some(projectPath, existed)
 
 let created =
     providersNode
@@ -113,8 +111,11 @@ match created with
     printfn "No provider projects needed scaffolding."
 | projects ->
     projects
-    |> List.iter (fun path ->
+    |> List.iter (fun (path, existed) ->
         let relative = Path.GetRelativePath(repoRoot, path)
-        printfn "Scaffolded %s" relative)
+        if existed then
+            printfn "Updated %s" relative
+        else
+            printfn "Scaffolded %s" relative)
 
 printfn "Done."
