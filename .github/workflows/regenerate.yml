@@ -1,0 +1,98 @@
+name: Regenerate Providers
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Regenerate providers
+        run: dotnet build -p:ForceCodeGen=true
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git status --porcelain | grep .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure git author
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "Nelknet CodeGen Bot"
+          git config user.email "bot@nelknet.dev"
+
+      - name: Import signing key
+        if: steps.diff.outputs.changed == 'true' && secrets.REGEN_GPG_PRIVATE_KEY != ''
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.REGEN_GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.REGEN_GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.REGEN_GPG_KEY_ID }}
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          printf '%s\n' "$GPG_PRIVATE_KEY" | gpg --batch --import
+          if [ -n "${GPG_KEY_ID}" ]; then
+            git config user.signingkey "$GPG_KEY_ID"
+          fi
+
+          if [ -n "${GPG_PASSPHRASE}" ]; then
+            mkdir -p ~/.local/bin
+            cat <<'EOF' > ~/.local/bin/gpg-wrapper
+#!/usr/bin/env bash
+exec gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" "$@"
+EOF
+            chmod +x ~/.local/bin/gpg-wrapper
+            echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -s --sign --output /tmp/gpg-test.asc --detach-sign .github/workflows/regenerate.yml
+            rm /tmp/gpg-test.asc
+            git config gpg.program ~/.local/bin/gpg-wrapper
+          else
+            git config gpg.program gpg
+          fi
+
+          git config commit.gpgsign true
+
+      - name: Commit changes
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GPG_TTY: ${{ runner.temp }}
+        run: |
+          git add -A
+          git commit -m "chore(codegen): regenerate provider surface"
+
+      - name: Push changes
+        if: steps.diff.outputs.changed == 'true'
+        run: git push origin HEAD

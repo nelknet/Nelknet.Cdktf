@@ -490,6 +490,4 @@ cdktf.out/
 .terraform/
 .terraform.lock.hcl
 
-# Generated provider artifacts (C# bindings and F# DSL output)
-generated/
-src/Providers/*/Generated/
+# Generated provider artifacts (C# bindings and F# DSL output) are tracked by automation
