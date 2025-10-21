@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
   regenerate:
-    if: github.actor != 'github-actions[bot]'
+    if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -50,13 +50,13 @@ jobs:
           fi
 
       - name: Configure git author
-        if: steps.diff.outputs.changed == 'true'
+        if: ${{ steps.diff.outputs.changed == 'true' }}
         run: |
           git config user.name "Nelknet CodeGen Bot"
           git config user.email "bot@nelknet.dev"
 
       - name: Import signing key
-        if: steps.diff.outputs.changed == 'true' && secrets.REGEN_GPG_PRIVATE_KEY != ''
+        if: ${{ steps.diff.outputs.changed == 'true' && secrets.REGEN_GPG_PRIVATE_KEY != '' }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.REGEN_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.REGEN_GPG_PASSPHRASE }}
@@ -86,7 +86,7 @@ EOF
           git config commit.gpgsign true
 
       - name: Commit changes
-        if: steps.diff.outputs.changed == 'true'
+        if: ${{ steps.diff.outputs.changed == 'true' }}
         env:
           GPG_TTY: ${{ runner.temp }}
         run: |
@@ -94,5 +94,5 @@ EOF
           git commit -m "chore(codegen): regenerate provider surface"
 
       - name: Push changes
-        if: steps.diff.outputs.changed == 'true'
+        if: ${{ steps.diff.outputs.changed == 'true' }}
         run: git push origin HEAD
