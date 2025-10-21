@@ -33,6 +33,7 @@
     <!-- Reference the generated provider project -->
     <ProjectReference Include="$(ProviderPackageDir)/hcloud.csproj"
                       Condition="Exists('$(ProviderPackageDir)/hcloud.csproj')"
+                      ReferenceOutputAssembly="false"
                       Pack="false" />
     <!-- Ensure CodeGen project is built before running generation -->
     <ProjectReference Include="$(RepoRoot)tools/Nelknet.Cdktf.CodeGen/Nelknet.Cdktf.CodeGen.fsproj"
@@ -42,6 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="$(ProviderId)" Condition="Exists('$(ProviderAssemblyPath)')">
+      <HintPath>$(ProviderAssemblyPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ProviderAssemblyPath)"
