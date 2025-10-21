@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: 1
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build (Release)
+        run: dotnet build -c Release -p:ForceCodeGen=true
+      - name: Pack packages
+        run: |
+          mkdir -p artifacts
+          dotnet pack src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj -c Release --no-build -o artifacts
+          dotnet pack src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj -c Release --no-build -o artifacts
+          dotnet pack src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj -c Release --no-build -o artifacts
+          dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Release --no-build -o artifacts
+          dotnet pack src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj -c Release --no-build -o artifacts
+      - name: Ensure API key
+        run: |
+          if [ -z "${NUGET_API_KEY}" ]; then
+            echo "NUGET_API_KEY is not set" >&2
+            exit 1
+          fi
+      - name: Push packages
+        run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/*.nupkg

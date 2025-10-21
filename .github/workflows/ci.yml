@@ -1,10 +1,8 @@
-name: CI
+name: Build
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
+  push:
     branches:
       - main
 
@@ -12,47 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      NUGET_XMLDOC_MODE: skip
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.6.0"
-      - name: Install npm dependencies
-        run: npm ci
-      - name: Scaffold provider projects
-        run: dotnet fsi tools/scaffold-providers.fsx
-      - name: Prime dotnet assets
-        run: |
-          dotnet restore examples/Nelknet.Cdktf.Examples/Nelknet.Cdktf.Examples.fsproj
-          dotnet restore src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj
-          dotnet restore src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj
-          dotnet restore src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj
-          dotnet restore src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
-      - name: Bootstrap providers
-        run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore -p:ForceCodeGen=true
-      - name: Pack packages (validation)
-        run: |
-          dotnet pack src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj -c Release -o artifacts --no-build
-          dotnet pack src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj -c Release -o artifacts --no-build
-          dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Release -o artifacts --no-build
-          dotnet pack src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj -c Release -o artifacts --no-build
-          dotnet pack src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj -c Release -o artifacts --no-build
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: nuget-packages
-          path: artifacts/**/*.nupkg
-          if-no-files-found: ignore
+      - name: dotnet build
+        run: dotnet build -p:ForceCodeGen=true

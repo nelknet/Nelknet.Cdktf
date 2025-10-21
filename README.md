@@ -14,7 +14,7 @@ F# computation expressions and helpers that sit on top of the CDK for Terraform 
 https://github.com/user-attachments/assets/8d1e7dd7-f04a-4114-8eae-63253d8f495c
 
 
-- **Schema‑driven generation** – provider projects carry MSBuild metadata; `dotnet build` (or `dotnet build -p:ForceCodeGen=true`) regenerates `src/Providers/<Provider>/Generated/...` on the fly and automation keeps those artifacts committed for you.
+- **Schema‑driven generation** – provider projects carry MSBuild metadata; run `dotnet build` (or `dotnet build -p:ForceCodeGen=true`) to refresh `src/Providers/<Provider>/Generated/...` and commit the regenerated surface alongside your changes.
 - **F#‑friendly operations** – Terraform maps become `seq<string * string>`, repeated fields accept `seq<'T>`, and common unions (e.g., `bool | cdktf.IResolvable`) expose overloads so you don't have to pass `obj`.
 - **Compile-time required checks** – generated builders track required custom operations with phantom types (`Missing`/`Present`), so omitting a mandatory field (e.g., `name`, `server_type`) produces a compile-time `CompilerMessage` error instead of a runtime failure.
 - **Ambient stack support** – `stack "name" { ... }` keeps the current `TerraformStack` available without threading it through every builder.
@@ -200,12 +200,13 @@ Adding a new provider is streamlined with the Bootstrap project:
    dotnet build -p:ForceCodeGen=true
    ```
 
-5. **Commit the intent**
+5. **Commit everything**
    - The updated `cdktf.json`
    - The new provider's `.fsproj` file in `src/Providers/<Provider>/`
    - Any documentation updates
+   - All generated changes (both `generated/<provider>` and `src/Providers/<Provider>/Generated/**`)
 
-   Push your branch and open a PR. The `Regenerate Providers` workflow will build on `main` after merge and add the generated provider surface as a follow-up commit.
+   Push your branch and open a PR. The build workflow simply runs `dotnet build`, so the PR must include the regenerated artifacts to stay green.
 
 ### What Happens During the Build
 
@@ -219,11 +220,9 @@ The Bootstrap project (`tools/Nelknet.Cdktf.Bootstrap/`) automatically:
 ### Upgrading an Existing Provider
 
 To upgrade a provider version:
-1. Update the version in `cdktf.json`
-2. Optionally run `scripts/regenerate.sh` locally to verify the build
-3. Commit only the `cdktf.json` change and open a PR
-
-Once merged, the automation pipeline detects the version bump, regenerates the code, and pushes the matching commit.
+1. Update the version in `cdktf.json`.
+2. Run `dotnet build -p:ForceCodeGen=true` (or `scripts/regenerate.sh`) to refresh the generated surface.
+3. Commit the updated `cdktf.json` together with the regenerated files and open a PR.
 
 ## Packaging
 
@@ -238,6 +237,8 @@ dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Releas
 ```
 
 Publish whichever packages you need (`dotnet nuget push artifacts/*.nupkg`). Consumers can depend on `Nelknet.Cdktf.Core` plus only the provider packages they require.
+
+The repository also ships a `Release` workflow (Actions tab) that builds, packs, and publishes every package to NuGet. Set `NUGET_API_KEY` in your environment or as a repository secret before running it.
 
 ## Extending the Generator
 
