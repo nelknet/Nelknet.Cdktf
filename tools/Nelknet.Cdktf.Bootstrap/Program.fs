@@ -132,41 +132,27 @@ let private needsProviderDownload (repoRoot: string) (provider: Provider) =
             printfn "Provider %s is up to date" provider.Id
             false
 
-let rec private ensureProvider (repoRoot: string) (provider: Provider) =
-    if needsProviderDownload repoRoot provider then
-        let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
-        Directory.CreateDirectory(providerDir) |> ignore
+let private locateCdktf (repoRoot: string) =
+    let binaryName = if OperatingSystem.IsWindows() then "cdktf.cmd" else "cdktf"
+    let localCdktf = Path.Combine(repoRoot, "node_modules", ".bin", binaryName)
+    if File.Exists(localCdktf) then localCdktf else "cdktf"
 
-        // Find cdktf command
-        let localCdktf =
-            let binaryName = if OperatingSystem.IsWindows() then "cdktf.cmd" else "cdktf"
-            Path.Combine(repoRoot, "node_modules", ".bin", binaryName)
+let private downloadProviders (repoRoot: string) (providers: Provider list) =
+    let providerArgs =
+        providers
+        |> List.map (fun p -> $"{p.Source}@={p.Version}")
+        |> List.distinct
 
-        let cdktfCmd = if File.Exists(localCdktf) then localCdktf else "cdktf"
+    if providerArgs.IsEmpty then ()
+    else
+        let args =
+            [ "provider"; "add" ]
+            @ providerArgs
+            @ [ "--language"; "csharp"; "--force-local" ]
 
-        // Run cdktf provider add
-        let args = [
-            "provider"; "add"
-            $"{provider.Source}@={provider.Version}"
-            "--language"; "csharp"
-            "--force-local"
-        ]
+        runProcess repoRoot (locateCdktf repoRoot) args |> ignore
 
-        runProcess repoRoot cdktfCmd args |> ignore
-
-        // Normalize the generated project
-        normalizeGeneratedProject repoRoot provider.Id
-
-        // Write version marker
-        let versionMarker = Path.Combine(providerDir, ".version")
-        File.WriteAllText(versionMarker, $"{provider.Source}@={provider.Version}")
-
-        // Build the provider
-        let projectPath = Path.Combine(providerDir, $"{provider.Id}.csproj")
-        if File.Exists(projectPath) then
-            runProcess (Path.GetDirectoryName(projectPath)) "dotnet" ["build"; "-c"; "Debug"] |> ignore
-
-and private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
+let private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
     let projectPath = Path.Combine(repoRoot, "generated", providerId, $"{providerId}.csproj")
     if not (File.Exists(projectPath)) then
         printfn "Generated project %s not found, skipping normalization" projectPath
@@ -250,6 +236,21 @@ and private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
 
         doc.Save(projectPath)
 
+let private finalizeProvider (repoRoot: string) (provider: Provider) =
+    let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
+    Directory.CreateDirectory(providerDir) |> ignore
+
+    normalizeGeneratedProject repoRoot provider.Id
+
+    let versionMarker = Path.Combine(providerDir, ".version")
+    File.WriteAllText(versionMarker, $"{provider.Source}@={provider.Version}")
+
+    let projectPath = Path.Combine(providerDir, $"{provider.Id}.csproj")
+    if File.Exists(projectPath) then
+        runProcess (Path.GetDirectoryName(projectPath)) "dotnet" ["build"; "-c"; "Debug"] |> ignore
+
+
+
 let private ensureProviderProject (repoRoot: string) (provider: Provider) =
     let providerDir = Path.Combine(repoRoot, "src", "Providers", provider.Module)
     let projectPath = Path.Combine(providerDir, $"Nelknet.Cdktf.Providers.{provider.Module}.fsproj")
@@ -317,10 +318,22 @@ let main argv =
                         printfn "Running npm install to get cdktf CLI..."
                         runProcess repoRoot "npm" ["install"] |> ignore
 
-                // Ensure only providers that need work
+                let providersNeedingDownload =
+                    providersNeedingWork
+                    |> List.filter (needsProviderDownload repoRoot)
+
+                if not providersNeedingDownload.IsEmpty then
+                    printfn "\n--- Downloading providers ---"
+                    downloadProviders repoRoot providersNeedingDownload
+
                 for provider in providersNeedingWork do
-                    printfn "\n--- Processing %s ---" provider.Id
-                    ensureProvider repoRoot provider
+                    printfn "\n--- Finalizing %s ---" provider.Id
+                    let requiresDownload =
+                        providersNeedingDownload
+                        |> List.exists (fun p -> StringComparer.OrdinalIgnoreCase.Equals(p.Id, provider.Id))
+
+                    if requiresDownload then
+                        finalizeProvider repoRoot provider
                     ensureProviderProject repoRoot provider
 
                 printfn "\n=== Bootstrap complete ==="

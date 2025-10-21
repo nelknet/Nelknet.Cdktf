@@ -28,7 +28,7 @@ jobs:
           dotnet-version: 8.0.x
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.6.0"
@@ -36,6 +36,13 @@ jobs:
         run: npm ci
       - name: Scaffold provider projects
         run: dotnet fsi tools/scaffold-providers.fsx
+      - name: Prime dotnet assets
+        run: |
+          dotnet restore examples/Nelknet.Cdktf.Examples/Nelknet.Cdktf.Examples.fsproj
+          dotnet restore src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj
+          dotnet restore src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj
+          dotnet restore src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj
+          dotnet restore src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj
       - name: Bootstrap providers
         run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap/Nelknet.Cdktf.Bootstrap.fsproj
       - name: Restore dependencies
