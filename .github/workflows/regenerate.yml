@@ -55,12 +55,17 @@ jobs:
           git config user.email "bot@nelknet.dev"
 
       - name: Import signing key
-        if: ${{ steps.diff.outputs.changed == 'true' && secrets.REGEN_GPG_PRIVATE_KEY != '' }}
+        if: ${{ steps.diff.outputs.changed == 'true' }}
         env:
           GPG_PRIVATE_KEY: ${{ secrets.REGEN_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.REGEN_GPG_PASSPHRASE }}
           GPG_KEY_ID: ${{ secrets.REGEN_GPG_KEY_ID }}
         run: |
+          if [ -z "${GPG_PRIVATE_KEY}" ]; then
+            echo "No signing key configured; leaving commits unsigned."
+            exit 0
+          fi
+
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg
           printf '%s\n' "$GPG_PRIVATE_KEY" | gpg --batch --import
