@@ -43,12 +43,6 @@
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="$(ProviderId)" Condition="Exists('$(ProviderAssemblyPath)')">
-      <HintPath>$(ProviderAssemblyPath)</HintPath>
-      <Private>true</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="$(ProviderAssemblyPath)"
           Pack="true"
           PackagePath="lib/net8.0/"
