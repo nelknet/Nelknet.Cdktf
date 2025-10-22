@@ -17,5 +17,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Bootstrap providers
+        run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap
       - name: dotnet build
         run: dotnet build

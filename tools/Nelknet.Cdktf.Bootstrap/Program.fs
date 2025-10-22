@@ -3,11 +3,14 @@ module Nelknet.Cdktf.Bootstrap
 open System
 open System.IO
 open System.Diagnostics
+open System.Text
 open System.Text.Json
 open System.Text.Json.Nodes
 open System.Xml.Linq
 open System.Collections.Generic
 open System.Linq
+open System.IO.Compression
+open System.Formats.Tar
 
 type Provider =
     { Id: string
@@ -33,6 +36,23 @@ let private capitalize (segment: string) =
     else
         let lower = segment.ToLowerInvariant()
         string (Char.ToUpperInvariant(lower[0])) + lower.Substring(1)
+
+let private pascalCase (value: string) =
+    if String.IsNullOrWhiteSpace(value) then value
+    else
+        let sb = StringBuilder()
+        let mutable lastWasSeparator = true
+
+        for ch in value do
+            if ch = '_' || ch = '-' || ch = ' ' then
+                lastWasSeparator <- true
+            elif lastWasSeparator then
+                sb.Append(Char.ToUpperInvariant(ch)) |> ignore
+                lastWasSeparator <- false
+            else
+                sb.Append(ch) |> ignore
+
+        sb.ToString()
 
 let private moduleNameFromProviderId (providerId: string) =
     providerId.Split([| '-'; '_' |], StringSplitOptions.RemoveEmptyEntries)
@@ -114,6 +134,91 @@ let private runProcess (workingDir: string) (fileName: string) (args: string lis
         if errors.Length > 0 then printfn "%s" errors
         proc.ExitCode
 
+let private tryGetProperty (element: JsonElement) (name: string) =
+    let mutable value = Unchecked.defaultof<JsonElement>
+    if element.TryGetProperty(name, &value) then Some value else None
+
+let private loadJsii (tarballPath: string) =
+    use stream = File.OpenRead(tarballPath)
+    use gzip = new GZipStream(stream, CompressionMode.Decompress)
+    use reader = new TarReader(gzip)
+
+    let mutable entry = reader.GetNextEntry()
+    let mutable content = None
+
+    while entry <> null && content.IsNone do
+        if entry.Name = "package/.jsii" then
+            use ms = new MemoryStream()
+            entry.DataStream.CopyTo(ms)
+            content <- Some(Encoding.UTF8.GetString(ms.ToArray()))
+
+        entry <- reader.GetNextEntry()
+
+    content |> Option.defaultWith(fun () -> failwith $"Unable to locate .jsii within '{tarballPath}'.")
+
+let private providerHasCompleteBindings (repoRoot: string) (provider: Provider) =
+    let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
+    if not (Directory.Exists(providerDir)) then
+        false
+    else
+        let tarball =
+            Directory.GetFiles(providerDir, "*.tgz")
+            |> Array.tryHead
+
+        match tarball with
+        | None ->
+            printfn "Provider %s tarball not found, will download" provider.Id
+            false
+        | Some tgz ->
+            try
+                let jsonText = loadJsii tgz
+                use doc = JsonDocument.Parse(jsonText)
+                let root = doc.RootElement
+                let types = root.GetProperty("types")
+
+                let missing =
+                    types.EnumerateObject()
+                    |> Seq.choose(fun entry ->
+                        let element = entry.Value
+                        match tryGetProperty element "kind" with
+                        | Some kind when kind.GetString() = "class" ->
+                            let baseType = tryGetProperty element "base" |> Option.map(fun v -> v.GetString())
+                            match baseType with
+                            | Some baseType when baseType = "cdktf.TerraformResource" || baseType = "cdktf.TerraformDataSource" || baseType = "cdktf.TerraformProvider" ->
+                                let fqn = element.GetProperty("fqn").GetString()
+                                let segments = fqn.Split('.', StringSplitOptions.RemoveEmptyEntries)
+                                if segments.Length < 2 then None
+                                else
+                                    let folderSegments =
+                                        segments
+                                        |> Array.skip 1
+                                        |> Array.take (segments.Length - 2)
+                                        |> Array.map pascalCase
+
+                                    let typeName = segments[segments.Length - 1] |> pascalCase
+                                    let relativeParts =
+                                        Array.concat [| [| provider.Id |]; folderSegments; [| $"{typeName}.cs" |] |]
+
+                                    let relativePath = Path.Combine(relativeParts)
+                                    let filePath = Path.Combine(providerDir, relativePath)
+
+                                    if File.Exists(filePath) then None else Some filePath
+                            | _ -> None
+                        | _ -> None)
+                    |> Seq.distinct
+                    |> Seq.truncate 5
+                    |> Seq.toList
+
+                if missing.IsEmpty then
+                    true
+                else
+                    let sample = String.Join(", ", missing)
+                    printfn "Provider %s missing generated bindings (e.g. %s), will download" provider.Id sample
+                    false
+            with ex ->
+                printfn "Failed to inspect provider %s bindings: %s" provider.Id ex.Message
+                false
+
 let private needsProviderDownload (repoRoot: string) (provider: Provider) =
     let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
     let versionMarker = Path.Combine(providerDir, ".version")
@@ -132,8 +237,11 @@ let private needsProviderDownload (repoRoot: string) (provider: Provider) =
                 provider.Id currentVersion expectedVersion
             true
         else
-            printfn "Provider %s is up to date" provider.Id
-            false
+            if providerHasCompleteBindings repoRoot provider then
+                printfn "Provider %s is up to date" provider.Id
+                false
+            else
+                true
 
 let private locateCdktf (repoRoot: string) =
     let binaryName = if OperatingSystem.IsWindows() then "cdktf.cmd" else "cdktf"
