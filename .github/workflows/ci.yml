@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 8.0.x
       - uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.8.x
+          terraform_version: latest
       - name: Bootstrap providers
         run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap
       - name: dotnet build
