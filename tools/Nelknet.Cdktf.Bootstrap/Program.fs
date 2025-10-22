@@ -134,119 +134,135 @@ let private runProcess (workingDir: string) (fileName: string) (args: string lis
         if errors.Length > 0 then printfn "%s" errors
         proc.ExitCode
 
-let private tryGetProperty (element: JsonElement) (name: string) =
-    let mutable value = Unchecked.defaultof<JsonElement>
-    if element.TryGetProperty(name, &value) then Some value else None
+let private locateCdktf (repoRoot: string) =
+    let binaryName = if OperatingSystem.IsWindows() then "cdktf.cmd" else "cdktf"
+    let localCdktf = Path.Combine(repoRoot, "node_modules", ".bin", binaryName)
+    if File.Exists(localCdktf) then localCdktf else "cdktf"
 
-let private loadJsii (tarballPath: string) =
+let private extractTarball (tarballPath: string) (destination: string) =
+    if Directory.Exists(destination) then
+        Directory.Delete(destination, true)
+
+    Directory.CreateDirectory(destination) |> ignore
+
     use stream = File.OpenRead(tarballPath)
     use gzip = new GZipStream(stream, CompressionMode.Decompress)
     use reader = new TarReader(gzip)
 
     let mutable entry = reader.GetNextEntry()
-    let mutable content = None
 
-    while entry <> null && content.IsNone do
-        if entry.Name = "package/.jsii" then
-            use ms = new MemoryStream()
-            entry.DataStream.CopyTo(ms)
-            content <- Some(Encoding.UTF8.GetString(ms.ToArray()))
+    while entry <> null do
+        let relativeName = entry.Name.TrimStart([| '/'; '\\'; '.' |])
+        if not (String.IsNullOrEmpty(relativeName)) then
+            let normalized =
+                relativeName
+                    .Replace('/', Path.DirectorySeparatorChar)
+                    .Replace('\\', Path.DirectorySeparatorChar)
+            let targetPath = Path.Combine(destination, normalized)
+
+            match entry.EntryType with
+            | TarEntryType.Directory ->
+                Directory.CreateDirectory(targetPath) |> ignore
+            | TarEntryType.RegularFile
+            | TarEntryType.V7RegularFile ->
+                let parent = Path.GetDirectoryName(targetPath)
+                if not (String.IsNullOrEmpty(parent)) then
+                    Directory.CreateDirectory(parent) |> ignore
+
+                use output = File.Create(targetPath)
+                if not (isNull entry.DataStream) then
+                    entry.DataStream.CopyTo(output)
+            | _ ->
+                ()
 
         entry <- reader.GetNextEntry()
 
-    content |> Option.defaultWith(fun () -> failwith $"Unable to locate .jsii within '{tarballPath}'.")
-
-let private providerHasCompleteBindings (repoRoot: string) (provider: Provider) =
+let private regenerateProviderBindings (repoRoot: string) (provider: Provider) =
     let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
     if not (Directory.Exists(providerDir)) then
-        false
-    else
-        let tarball =
-            Directory.GetFiles(providerDir, "*.tgz")
-            |> Array.tryHead
+        failwithf "Provider directory '%s' not found. Run 'cdktf get' before bootstrap." providerDir
 
+    let tarball =
+        Directory.GetFiles(providerDir, $"{provider.Id}-*.tgz")
+        |> Array.tryHead
+
+    let tarballPath =
         match tarball with
-        | None ->
-            printfn "Provider %s tarball not found, will download" provider.Id
-            false
-        | Some tgz ->
-            try
-                let jsonText = loadJsii tgz
-                use doc = JsonDocument.Parse(jsonText)
-                let root = doc.RootElement
-                let types = root.GetProperty("types")
+        | Some path -> path
+        | None -> failwithf "Unable to locate provider package for '%s' in %s" provider.Id providerDir
 
-                let missing =
-                    types.EnumerateObject()
-                    |> Seq.choose(fun entry ->
-                        let element = entry.Value
-                        match tryGetProperty element "kind" with
-                        | Some kind when kind.GetString() = "class" ->
-                            let baseType = tryGetProperty element "base" |> Option.map(fun v -> v.GetString())
-                            match baseType with
-                            | Some baseType when baseType = "cdktf.TerraformResource" || baseType = "cdktf.TerraformDataSource" || baseType = "cdktf.TerraformProvider" ->
-                                let fqn = element.GetProperty("fqn").GetString()
-                                let segments = fqn.Split('.', StringSplitOptions.RemoveEmptyEntries)
-                                if segments.Length < 2 then None
-                                else
-                                    let folderSegments =
-                                        segments
-                                        |> Array.skip 1
-                                        |> Array.take (segments.Length - 2)
-                                        |> Array.map pascalCase
+    let stagingRoot = Path.Combine(providerDir, ".jsii-staging")
+    printfn "Extracting %s to %s" (Path.GetFileName(tarballPath)) stagingRoot
+    extractTarball tarballPath stagingRoot
 
-                                    let typeName = segments[segments.Length - 1] |> pascalCase
-                                    let relativeParts =
-                                        Array.concat [| [| provider.Id |]; folderSegments; [| $"{typeName}.cs" |] |]
+    let packageDir = Path.Combine(stagingRoot, "package")
+    if not (Directory.Exists(packageDir)) then
+        failwithf "Unexpected layout for provider '%s'. Expected package folder in extracted tarball." provider.Id
 
-                                    let relativePath = Path.Combine(relativeParts)
-                                    let filePath = Path.Combine(providerDir, relativePath)
+    printfn "Installing jsii dependencies for %s" provider.Id
+    runProcess packageDir "npm" ["install"] |> ignore
 
-                                    if File.Exists(filePath) then None else Some filePath
-                            | _ -> None
-                        | _ -> None)
-                    |> Seq.distinct
-                    |> Seq.truncate 5
-                    |> Seq.toList
+    let originalNodeOptions = Environment.GetEnvironmentVariable("NODE_OPTIONS")
+    let nodeOptionsWasSet = not (String.IsNullOrEmpty(originalNodeOptions))
+    if not nodeOptionsWasSet then
+        Environment.SetEnvironmentVariable("NODE_OPTIONS", "--max-old-space-size=16384")
+    elif not (originalNodeOptions.Contains("--max-old-space-size")) then
+        printfn "NODE_OPTIONS already set to '%s'. jsii-pacmak might require more memory for large providers." originalNodeOptions
 
-                if missing.IsEmpty then
-                    true
-                else
-                    let sample = String.Join(", ", missing)
-                    printfn "Provider %s missing generated bindings (e.g. %s), will download" provider.Id sample
-                    false
-            with ex ->
-                printfn "Failed to inspect provider %s bindings: %s" provider.Id ex.Message
-                false
+    try
+        let outputRoot = Path.Combine(stagingRoot, "out")
+        Directory.CreateDirectory(outputRoot) |> ignore
 
-let private needsProviderDownload (repoRoot: string) (provider: Provider) =
-    let providerDir = Path.Combine(repoRoot, "generated", provider.Id)
-    let versionMarker = Path.Combine(providerDir, ".version")
-    let expectedVersion = $"{provider.Source}@={provider.Version}"
+        printfn "Running jsii-pacmak for provider %s" provider.Id
+        runProcess packageDir "npx" ["--yes"; "jsii-pacmak"; "--code-only"; "--target"; "dotnet"; "--outdir"; outputRoot] |> ignore
 
-    if not (Directory.Exists(providerDir)) then
-        printfn "Provider %s not found, will download" provider.Id
-        true
-    elif not (File.Exists(versionMarker)) then
-        printfn "Version marker missing for %s, will download" provider.Id
-        true
-    else
-        let currentVersion = File.ReadAllText(versionMarker).Trim()
-        if currentVersion <> expectedVersion then
-            printfn "Provider %s version mismatch (current: %s, expected: %s), will download"
-                provider.Id currentVersion expectedVersion
-            true
-        else
-            if providerHasCompleteBindings repoRoot provider then
-                printfn "Provider %s is up to date" provider.Id
-                false
+        let dotnetRoot = Path.Combine(outputRoot, "dotnet")
+        if not (Directory.Exists(dotnetRoot)) then
+            failwithf "jsii-pacmak did not produce dotnet output for provider '%s'." provider.Id
+
+        let providerOutput =
+            let candidate = Path.Combine(dotnetRoot, provider.Id)
+            if Directory.Exists(candidate) then candidate
             else
-                true
+                let subdirs = Directory.GetDirectories(dotnetRoot)
+                if subdirs.Length = 1 then subdirs[0]
+                else failwithf "Unable to determine dotnet output folder for provider '%s'." provider.Id
 
-let private locateCdktf (repoRoot: string) =
-    let binaryName = if OperatingSystem.IsWindows() then "cdktf.cmd" else "cdktf"
-    let localCdktf = Path.Combine(repoRoot, "node_modules", ".bin", binaryName)
-    if File.Exists(localCdktf) then localCdktf else "cdktf"
+        // Copy project metadata to the provider root
+        let copyIfExists fileName =
+            let source = Path.Combine(providerOutput, fileName)
+            if File.Exists(source) then
+                let target = Path.Combine(providerDir, fileName)
+                File.Copy(source, target, true)
+
+        copyIfExists "AssemblyInfo.cs"
+        copyIfExists $"{provider.Id}.csproj"
+        copyIfExists $"{provider.Id}-0.0.0.tgz"
+
+        let sourceResources = Path.Combine(providerOutput, provider.Id)
+        if not (Directory.Exists(sourceResources)) then
+            failwithf "Expected resource folder '%s' in jsii output." sourceResources
+
+        let targetResources = Path.Combine(providerDir, provider.Id)
+        if Directory.Exists(targetResources) then
+            Directory.Delete(targetResources, true)
+
+        Directory.Move(sourceResources, targetResources)
+
+        // Clean up remaining jsii output for this provider
+        Directory.Delete(providerOutput, true)
+    finally
+        if not nodeOptionsWasSet then
+            Environment.SetEnvironmentVariable("NODE_OPTIONS", originalNodeOptions)
+
+        if Directory.Exists(stagingRoot) then
+            try
+                Directory.Delete(stagingRoot, true)
+            with _ -> ()
+
+    let skipFile = Path.Combine(providerDir, "skip-files.txt")
+    if File.Exists(skipFile) then
+        File.Delete(skipFile)
 
 let private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
     let projectPath = Path.Combine(repoRoot, "generated", providerId, $"{providerId}.csproj")
@@ -394,43 +410,27 @@ let main argv =
             let providers = loadProviders repoRoot
             printfn "Found %d providers in cdktf.json" providers.Length
 
-            // Check if any provider needs updating or if F# projects are missing
-            // Identify providers that either need their raw bindings refreshed or the F# surface regenerated
-            let providersNeedingWork =
-                providers
-                |> List.filter (fun p ->
-                    needsProviderDownload repoRoot p ||
-                    not (File.Exists(Path.Combine(repoRoot, "src", "Providers", p.Module,
-                                                  $"Nelknet.Cdktf.Providers.{p.Module}.fsproj"))))
+            let packageJson = Path.Combine(repoRoot, "package.json")
+            let nodeModules = Path.Combine(repoRoot, "node_modules")
 
-            if List.isEmpty providersNeedingWork then
-                printfn "All providers are up to date"
-                0
-            else
-                printfn "Found %d provider(s) needing updates" providersNeedingWork.Length
+            if File.Exists(packageJson) && not (Directory.Exists(nodeModules)) then
+                printfn "Running npm install to get cdktf CLI..."
+                runProcess repoRoot "npm" ["install"] |> ignore
 
-                // Ensure node_modules exist if we need to download
-                let packageJson = Path.Combine(repoRoot, "package.json")
-                let nodeModules = Path.Combine(repoRoot, "node_modules")
+            printfn "\n--- Running cdktf get ---"
+            runProcess repoRoot (locateCdktf repoRoot) ["get"; "--language"; "csharp"; "--force-local"] |> ignore
 
-                if File.Exists(packageJson) && not (Directory.Exists(nodeModules)) then
-                    printfn "Running npm install to get cdktf CLI..."
-                    runProcess repoRoot "npm" ["install"] |> ignore
+            for provider in providers do
+                printfn "\n--- Regenerating %s ---" provider.Id
+                regenerateProviderBindings repoRoot provider
+                finalizeProvider repoRoot provider
+                ensureProviderProject repoRoot provider
 
-                printfn "\n--- Running cdktf get ---"
-                // One shot download of the providers referenced in cdktf.json; skipping post-processing (versions, etc.)
-                runProcess repoRoot (locateCdktf repoRoot) ["get"; "--language"; "csharp"; "--force-local"] |> ignore
+            printfn "\n--- Running dotnet restore ---"
+            runProcess repoRoot "dotnet" ["restore"] |> ignore
 
-                for provider in providersNeedingWork do
-                    printfn "\n--- Finalizing %s ---" provider.Id
-                    finalizeProvider repoRoot provider
-                    ensureProviderProject repoRoot provider
-                    
-                printfn "\n--- Running dotnet restore ---"
-                runProcess repoRoot "dotnet" ["restore"] |> ignore
-
-                printfn "\n=== Bootstrap complete ==="
-                0
+            printfn "\n=== Bootstrap complete ==="
+            0
 
     with ex ->
         printfn "Bootstrap failed: %s" ex.Message

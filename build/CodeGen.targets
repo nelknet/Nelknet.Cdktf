@@ -19,6 +19,6 @@
     </PropertyGroup>
 
     <Exec Condition="'$(_NeedsCodeGen)' == 'true' OR '$(ForceCodeGen)' == 'true'"
-          Command="dotnet run --project &quot;$(CodeGenTool)&quot; --configuration &quot;$(_CodeGenConfiguration)&quot; -- --provider-id &quot;$(ProviderId)&quot; --module-name &quot;$(ProviderModule)&quot; --namespace &quot;$(ProviderNamespace)&quot; --package-dir &quot;$(ProviderPackageDir)&quot; --output-root &quot;$(GeneratedOutputRoot)&quot;" />
+          Command="dotnet run --no-build --project &quot;$(CodeGenTool)&quot; --configuration &quot;$(_CodeGenConfiguration)&quot; -- --provider-id &quot;$(ProviderId)&quot; --module-name &quot;$(ProviderModule)&quot; --namespace &quot;$(ProviderNamespace)&quot; --package-dir &quot;$(ProviderPackageDir)&quot; --output-root &quot;$(GeneratedOutputRoot)&quot;" />
   </Target>
 </Project>
