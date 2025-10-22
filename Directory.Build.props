@@ -1,5 +1,9 @@
 <Project>
+  <Import Project="build/Version.props" Condition="Exists('$(MSBuildThisFileDirectory)build/Version.props')" />
+
   <PropertyGroup>
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <Version Condition="'$(Version)' == '' and '$(NelknetCdktfVersion)' != ''">$(NelknetCdktfVersion)</Version>
+    <PackageVersion Condition="'$(PackageVersion)' == '' and '$(NelknetCdktfVersion)' != ''">$(NelknetCdktfVersion)</PackageVersion>
   </PropertyGroup>
 </Project>

@@ -5,7 +5,6 @@
     <RootNamespace>Nelknet.Cdktf.Providers.Aws</RootNamespace>
     <AssemblyName>Nelknet.Cdktf.Providers.Aws</AssemblyName>
     <PackageId>Nelknet.Cdktf.Providers.Aws</PackageId>
-    <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
     <Description>F# computation expression for the CDKTF provider hashicorp/aws (version 5.100.0).</Description>

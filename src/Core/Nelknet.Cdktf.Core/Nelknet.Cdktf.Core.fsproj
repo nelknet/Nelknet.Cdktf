@@ -5,7 +5,6 @@
     <RootNamespace>Nelknet.Cdktf</RootNamespace>
     <AssemblyName>Nelknet.Cdktf</AssemblyName>
     <PackageId>Nelknet.Cdktf.Core</PackageId>
-    <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
     <Description>Core helpers and stack DSL for CDK for Terraform in F#.</Description>

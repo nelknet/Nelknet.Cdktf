@@ -5,7 +5,6 @@
     <RootNamespace>Nelknet.Cdktf.Providers.Hcloud</RootNamespace>
     <AssemblyName>Nelknet.Cdktf.Providers.Hcloud</AssemblyName>
     <PackageId>Nelknet.Cdktf.Providers.Hcloud</PackageId>
-    <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
     <Description>F# computation expression for the CDKTF provider hetznercloud/hcloud (version 1.54.0).</Description>

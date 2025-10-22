@@ -5,7 +5,6 @@
     <RootNamespace>Nelknet.Cdktf.Providers.Random</RootNamespace>
     <AssemblyName>Nelknet.Cdktf.Providers.Random</AssemblyName>
     <PackageId>Nelknet.Cdktf.Providers.Random</PackageId>
-    <Version>0.1.0</Version>
     <Authors>Nelknet</Authors>
     <Company>Nelknet</Company>
     <Description>F# computation expression for the CDKTF provider hashicorp/random (version 3.6.0).</Description>
