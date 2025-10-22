@@ -417,6 +417,9 @@ let main argv =
                     printfn "Running npm install to get cdktf CLI..."
                     runProcess repoRoot "npm" ["install"] |> ignore
 
+                printfn "\n--- Running dotnet restore ---"
+                runProcess repoRoot "dotnet" ["restore"] |> ignore
+
                 printfn "\n--- Running cdktf get ---"
                 // One shot download of the providers referenced in cdktf.json; skipping post-processing (versions, etc.)
                 runProcess repoRoot (locateCdktf repoRoot) ["get"; "--language"; "csharp"; "--force-local"] |> ignore
