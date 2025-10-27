@@ -143,17 +143,6 @@ cdktf deploy --auto-approve
 cdktf destroy --auto-approve   # Clean up when done
 ```
 
-## Repository Layout
-
-```plaintext
-src/Core/Nelknet.Cdktf.Core/     – core helpers (stack DSL, output helpers)
-src/Providers/Hcloud/             – generated Hetzner computation expression
-src/Providers/_Template/          – scaffold template consumed by the provider manager
-examples/Nelknet.Cdktf.Examples/  – minimal stack using the generated Hetzner example
-generated/                        – raw .NET bindings emitted by cdktf provider add (ignored)
-tools/Nelknet.Cdktf.CodeGen/      – Fabulous.AST-based generator
-```
-
 ## Prerequisites
 
 For working with this repository or consuming the packages:
