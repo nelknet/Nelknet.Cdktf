@@ -21,29 +21,37 @@ https://github.com/user-attachments/assets/8d1e7dd7-f04a-4114-8eae-63253d8f495c
 
 ## Getting Started
 
-Install the NuGet packages for the providers you need, then create your infrastructure as code in F#:
+Install the NuGet packages for the providers you need, then create your infrastructure as code in F#.
+
+### Prerequisites
+
+- .NET 8 SDK (`dotnet --version` ≥ 8.0)
+- Node.js 20.x or 22.x with npm (required by the CDKTF CLI)
+- CDKTF CLI 0.21.x – `npm install --global cdktf-cli@0.21`
+- Terraform CLI 1.6+ (for `cdktf deploy` / `cdktf destroy`)
+- Cloud credentials for the providers you plan to use (e.g., `HCLOUD_TOKEN` for Hetzner)
 
 ### Quick Start
 
 1. **Create an infrastructure project**
    ```bash
-   dotnet new console -lang F# -n Demo.Infra
+   mkdir Demo.Infra
    cd Demo.Infra
+   dotnet new console -lang F# --framework net8.0
    ```
 
-2. **Install the provider packages you need**
+2. **Install the providers you need**
    ```bash
    dotnet add package Nelknet.Cdktf.Providers.Aws      # For AWS
    dotnet add package Nelknet.Cdktf.Providers.Azurerm  # For Azure
    dotnet add package Nelknet.Cdktf.Providers.Hcloud   # For Hetzner
    ```
-   The provider packages bring `Nelknet.Cdktf.Core` and `HashiCorp.Cdktf` transitively.
+   Provider packages bring `Nelknet.Cdktf.Core`, the CDKTF runtime, and the generated C# bindings.
 
 3. **Write your infrastructure**
    ```fsharp
    open Nelknet.Cdktf
-   open Nelknet.Cdktf.Providers.Aws
-   open Nelknet.Cdktf.Providers.Aws.Aws
+   open Nelknet.Cdktf.Providers
    open Nelknet.Cdktf.Terraform
 
    [<EntryPoint>]
@@ -55,9 +63,9 @@ Install the NuGet packages for the providers you need, then create your infrastr
                        region "us-east-1"
                    }
 
-               Aws.s3Bucket "state" {
-                   bucket "demo-state-bucket"
-               }
+                Aws.s3Bucket "state" {
+                    bucket "demo-state-bucket"
+                }
            }
 
        app.Synth()
@@ -68,7 +76,7 @@ Install the NuGet packages for the providers you need, then create your infrastr
    ```json
    {
      "language": "csharp",
-     "app": "dotnet run --project ./Demo.Infra",
+     "app": "dotnet run --no-build",
      "codeMakerOutput": "generated",
      "terraformProviders": [
        "hashicorp/aws@=5.100.0"
@@ -80,11 +88,12 @@ Install the NuGet packages for the providers you need, then create your infrastr
 
 5. **Deploy your infrastructure**
    ```bash
-   cdktf get         # Download provider bindings
-   dotnet build      # Build your project
-   cdktf synth       # Generate Terraform JSON
-   cdktf deploy      # Deploy to cloud (requires credentials)
+   cdktf get         # Download provider tarballs for the CDKTF CLI
+   dotnet build      # Compile your stack and verify references
+   cdktf synth       # Run the app command and emit Terraform JSON
+   cdktf deploy      # Apply the stack (requires provider credentials)
    ```
+   `dotnet run` will also synthesize the stack, but `cdktf synth` is what the CLI executes before `cdktf deploy`.
 
 ## Example: Hetzner Cloud Server
 
@@ -92,8 +101,7 @@ Here's a complete example using the Hetzner Cloud provider:
 
 ```fsharp
 open Nelknet.Cdktf
-open Nelknet.Cdktf.Providers.Hcloud
-open Nelknet.Cdktf.Providers.Hcloud.Hcloud
+open Nelknet.Cdktf.Providers
 open Nelknet.Cdktf.Terraform
 
 let apiToken = System.Environment.GetEnvironmentVariable "HCLOUD_TOKEN"
@@ -130,6 +138,7 @@ app.Synth()
 Deploy with:
 ```bash
 export HCLOUD_TOKEN=... # Your Hetzner API token
+cdktf get
 cdktf deploy --auto-approve
 cdktf destroy --auto-approve   # Clean up when done
 ```

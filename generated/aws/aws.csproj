@@ -21,10 +21,11 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TargetFramework>net8.0</TargetFramework>
     <RollForward>Major</RollForward>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <NoWarn>0612,0618,1573,1587,1591,8600,8602,8618,8632</NoWarn>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="aws-0.0.0.tgz" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.JSII.Runtime" />
     <PackageReference Include="HashiCorp.Cdktf" />
@@ -39,9 +40,5 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Nullable>annotations</Nullable>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="aws/**/*.cs" />
-  </ItemGroup>
 </Project>

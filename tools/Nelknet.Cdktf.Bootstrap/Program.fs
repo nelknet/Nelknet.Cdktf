@@ -290,27 +290,10 @@ let private normalizeGeneratedProject (repoRoot: string) (providerId: string) =
             setElementValue "GenerateDocumentationFile" "false"
             setElementValue "GeneratePackageOnBuild" "false"
             setElementValue "Nullable" "annotations"
-            setElementValue "EnableDefaultCompileItems" "false"
 
-        // Remove embedded resources
-        let embeddedResources = doc.Root.Descendants(XName.Get("EmbeddedResource")) |> Seq.toArray
-        for embedded in embeddedResources do
-            embedded.Remove()
-
-        // Ensure compile items exist
-        let compileExists =
-            doc.Root.Descendants(XName.Get("Compile"))
-            |> Seq.exists (fun c ->
-                match c.Attribute(XName.Get("Include")) with
-                | null -> false
-                | attr -> attr.Value.Contains($"{providerId}/"))
-
-        if not compileExists then
-            let itemGroup = XElement(XName.Get("ItemGroup"))
-            let compile = XElement(XName.Get("Compile"))
-            compile.SetAttributeValue(XName.Get("Include"), $"{providerId}/**/*.cs")
-            itemGroup.Add(compile)
-            doc.Root.Add(itemGroup)
+            match group.Element(XName.Get("EnableDefaultCompileItems")) with
+            | null -> ()
+            | element -> element.Remove()
 
         // Remove version attributes from PackageReferences
         for reference in doc.Root.Descendants(XName.Get("PackageReference")) do
@@ -361,8 +344,10 @@ let private finalizeProvider (repoRoot: string) (provider: Provider) =
 
     let projectPath = Path.Combine(providerDir, $"{provider.Id}.csproj")
     if File.Exists(projectPath) then
-        // Build once to make sure restore succeeds with our centrally managed packages
-        runProcess (Path.GetDirectoryName(projectPath)) "dotnet" ["build"; "-c"; "Debug"] |> ignore
+        // Build once per configuration to make sure restore succeeds with our centrally managed packages
+        let projectDir = Path.GetDirectoryName(projectPath)
+        runProcess projectDir "dotnet" ["build"; "-c"; "Debug"] |> ignore
+        runProcess projectDir "dotnet" ["build"; "-c"; "Release"] |> ignore
 
 
 

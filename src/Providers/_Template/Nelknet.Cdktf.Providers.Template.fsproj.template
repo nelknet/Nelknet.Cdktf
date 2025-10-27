@@ -29,10 +29,12 @@
   <Import Project="$(RepoRoot)build/CodeGen.targets" />
   <ItemGroup>
     <ProjectReference Include="../../Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj" />
-    <!-- Reference the generated provider project -->
-    <ProjectReference Include="$(ProviderPackageDir)/{{ProviderId}}.csproj"
-                      Condition="Exists('$(ProviderPackageDir)/{{ProviderId}}.csproj')"
-                      Pack="false" />
+    <!-- Reference the generated provider assembly directly so we can bundle it into the NuGet package -->
+    <Reference Include="$(ProviderId)"
+               Condition="Exists('$(ProviderAssemblyPath)')">
+      <HintPath>$(ProviderAssemblyPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
     <!-- Ensure CodeGen project is built before running generation -->
     <ProjectReference Include="$(RepoRoot)tools/Nelknet.Cdktf.CodeGen/Nelknet.Cdktf.CodeGen.fsproj"
                       ReferenceOutputAssembly="false"
@@ -43,14 +45,14 @@
     <None Include="../../../README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(ProviderAssemblyPath)"
-          Pack="true"
-          PackagePath="lib/net8.0/"
-          Condition="Exists('$(ProviderAssemblyPath)')" />
-    <None Include="$(ProviderPackageDir)\bin\$(Configuration)\net8.0\$(ProviderId).pdb"
-          Pack="true"
-          PackagePath="lib/net8.0/"
-          Condition="Exists('$(ProviderPackageDir)\bin\$(Configuration)\net8.0\$(ProviderId).pdb')" />
+    <Content Include="$(ProviderAssemblyPath)"
+             Pack="true"
+             PackagePath="lib/net8.0/"
+             Condition="Exists('$(ProviderAssemblyPath)')" />
+    <Content Include="$(ProviderPackageDir)\bin\$(Configuration)\net8.0\$(ProviderId).pdb"
+             Pack="true"
+             PackagePath="lib/net8.0/"
+             Condition="Exists('$(ProviderPackageDir)\bin\$(Configuration)\net8.0\$(ProviderId).pdb')" />
   </ItemGroup>
   <!-- Include generated F# files (CodeGen.targets ensures they exist before build) -->
   <ItemGroup>
