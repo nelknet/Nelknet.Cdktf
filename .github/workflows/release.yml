@@ -25,24 +25,25 @@ jobs:
         id: version
         run: |
           VERSION=$(python - <<'PY'
-import pathlib
-from xml.etree import ElementTree as ET
-props = pathlib.Path('build/Version.props')
-tree = ET.parse(props)
-root = tree.getroot()
-if root.tag.endswith('Project'):
-    prop_group = root.find('PropertyGroup')
-else:
-    prop_group = root
-version = None
-for child in prop_group:
-    if child.tag.endswith('NelknetCdktfVersion'):
-        version = (child.text or '').strip()
-        break
-if not version:
-    raise SystemExit('NelknetCdktfVersion not found in build/Version.props')
-print(version)
-PY
+          if True:
+              import pathlib
+              from xml.etree import ElementTree as ET
+              props = pathlib.Path('build/Version.props')
+              tree = ET.parse(props)
+              root = tree.getroot()
+              if root.tag.endswith('Project'):
+                  prop_group = root.find('PropertyGroup')
+              else:
+                  prop_group = root
+              version = None
+              for child in prop_group:
+                  if child.tag.endswith('NelknetCdktfVersion'):
+                      version = (child.text or '').strip()
+                      break
+              if not version:
+                  raise SystemExit('NelknetCdktfVersion not found in build/Version.props')
+              print(version)
+          PY
           )
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           if [ "${GITHUB_REF_TYPE:-}" = "tag" ]; then
