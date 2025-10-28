@@ -27,9 +27,9 @@ Install the NuGet packages for the providers you need, then create your infrastr
 
 - .NET 8 SDK (`dotnet --version` ≥ 8.0)
 - Node.js 20.x or 22.x with npm (required by the CDKTF CLI)
-- CDKTF CLI 0.21.x – `npm install --global cdktf-cli@0.21`
-- Terraform CLI 1.6+ (for `cdktf deploy` / `cdktf destroy`)
-- Cloud credentials for the providers you plan to use (e.g., `HCLOUD_TOKEN` for Hetzner)
+- CDKTF CLI
+- Terraform/OpenTofu CLI
+- Cloud credentials for the providers you plan to use (e.g., `HCLOUD_TOKEN` for Hetzner, etc.)
 
 ### Quick Start
 
@@ -37,7 +37,7 @@ Install the NuGet packages for the providers you need, then create your infrastr
    ```bash
    mkdir Demo.Infra
    cd Demo.Infra
-   dotnet new console -lang F# --framework net8.0
+   dotnet new console -lang F#
    ```
 
 2. **Install the providers you need**
@@ -76,7 +76,7 @@ Install the NuGet packages for the providers you need, then create your infrastr
    ```json
    {
      "language": "csharp",
-     "app": "dotnet run --no-build",
+     "app": "dotnet run",
      "codeMakerOutput": "generated",
      "terraformProviders": [
        "hashicorp/aws@=5.100.0"
@@ -88,13 +88,10 @@ Install the NuGet packages for the providers you need, then create your infrastr
 
 5. **Deploy your infrastructure**
    ```bash
-   cdktf get         # Download provider tarballs for the CDKTF CLI
-   dotnet build      # Compile your stack and verify references
    cdktf synth       # Run the app command and emit Terraform JSON
    cdktf deploy      # Apply the stack (requires provider credentials)
    ```
-   `dotnet run` will also synthesize the stack, but `cdktf synth` is what the CLI executes before `cdktf deploy`.
-
+   
 ## Example: Hetzner Cloud Server
 
 Here's a complete example using the Hetzner Cloud provider:
@@ -138,19 +135,9 @@ app.Synth()
 Deploy with:
 ```bash
 export HCLOUD_TOKEN=... # Your Hetzner API token
-cdktf get
 cdktf deploy --auto-approve
 cdktf destroy --auto-approve   # Clean up when done
 ```
-
-## Prerequisites
-
-For working with this repository or consuming the packages:
-
-- .NET SDK 8.0 (or newer) – for building the DSL and running stacks
-- Node.js 18+ with npm – required by the CDK for Terraform CLI
-- CDKTF CLI 0.21.x – `npm install --global cdktf-cli@0.21`
-- Terraform CLI 1.6+ – optional for local deploys, required for `cdktf deploy` / `cdktf destroy`
 
 ## Development
 
@@ -237,21 +224,5 @@ dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Releas
 Publish whichever packages you need (`dotnet nuget push artifacts/*.nupkg`). Consumers can depend on `Nelknet.Cdktf.Core` plus only the provider packages they require.
 
 The repository also ships a `Release` workflow (Actions tab) that builds, packs, and publishes every package to NuGet. Set `NUGET_API_KEY` in your environment or as a repository secret before running it.
-
-## Extending the Generator
-
-The generator is intentionally small so it is easy to extend. Examples of tweaks you can make quickly:
-
-- Detect additional union patterns and add typed overloads
-- Add convenience operations (e.g., `labelsFrom` that loads a JSON file) by post-processing `BuilderDefinition`s
-- Emit module-level aliases if you prefer short helper names (`Hcloud.server` vs. `Hcloud.serverResource`, etc.)
-
-Because everything is schema-driven you only need to regenerate when the provider version changes—no manual edits to the generated files are necessary.
-
-## Development Scripts
-
-- `dotnet run --project tools/Nelknet.Cdktf.CodeGen` – regenerate computation expressions from `.jsii`
-- `dotnet build` – restore and build all projects
-- `cdktf deploy/destroy` – run the example stack (requires `HCLOUD_TOKEN`)
 
 Happy infrastructure hacking in F#!
