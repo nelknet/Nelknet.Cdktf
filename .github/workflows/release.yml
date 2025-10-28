@@ -62,11 +62,11 @@ jobs:
       - name: Pack packages
         run: |
           mkdir -p artifacts
-          dotnet pack src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj -c Release --no-build -o artifacts
-          dotnet pack src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj -c Release --no-build -o artifacts
-          dotnet pack src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj -c Release --no-build -o artifacts
-          dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Release --no-build -o artifacts
-          dotnet pack src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj -c Release --no-build -o artifacts
+          dotnet pack src/Core/Nelknet.Cdktf.Core/Nelknet.Cdktf.Core.fsproj -c Release -o artifacts
+          dotnet pack src/Providers/Aws/Nelknet.Cdktf.Providers.Aws.fsproj -c Release -o artifacts
+          dotnet pack src/Providers/Azurerm/Nelknet.Cdktf.Providers.Azurerm.fsproj -c Release -o artifacts
+          dotnet pack src/Providers/Hcloud/Nelknet.Cdktf.Providers.Hcloud.fsproj -c Release -o artifacts
+          dotnet pack src/Providers/Random/Nelknet.Cdktf.Providers.Random.fsproj -c Release -o artifacts
       - name: Ensure API key
         run: |
           if [ -z "${NUGET_API_KEY}" ]; then
