@@ -146,19 +146,15 @@ cdktf destroy --auto-approve   # Clean up when done
 After cloning this repository:
 
 ```bash
-npm install
 dotnet build -p:ForceCodeGen=true
 ```
 
-This installs the local Node dependencies and repopulates the tracked `generated/` and `src/Providers/*/Generated` directories so the solution builds immediately.
+This automatically:
+- Runs the Bootstrap tool (via `Directory.Build.targets`) which installs Node dependencies if needed and downloads provider bindings
+- Generates F# DSL code for all providers
+- Builds the entire solution
 
-You can rerun the combined restore/build pipeline at any time with:
-
-```bash
-./scripts/regenerate.sh
-```
-
-The same script is used by CI before it commits regenerated outputs back to `main`.
+The build process is fully automated - you don't need to run `npm install` or any other setup commands manually.
 
 ### Adding a New Provider
 
