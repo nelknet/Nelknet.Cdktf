@@ -58,7 +58,7 @@ jobs:
       - name: Bootstrap providers
         run: dotnet run --project tools/Nelknet.Cdktf.Bootstrap
       - name: Build (Release)
-        run: dotnet build -c Release -p:ForceCodeGen=true
+        run: dotnet build -c Release
       - name: Pack packages
         run: |
           mkdir -p artifacts
